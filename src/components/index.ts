@@ -4,5 +4,8 @@ import Heading from "./Heading";
 import SideBar from "./SideBar";
 import TextSection from "./TextSection";
 import FilesSection from "./FilesSection";
+import DropZone from "./DropZone";
+import FilesList from "./FilesList";
+import FileCard from "./FileCard";
 
-export { Header, MainCard, Heading, SideBar, TextSection, FilesSection };
+export { Header, MainCard, Heading, SideBar, TextSection, FilesSection, DropZone, FilesList, FileCard };
