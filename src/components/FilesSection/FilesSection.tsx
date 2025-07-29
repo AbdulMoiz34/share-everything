@@ -12,6 +12,9 @@ const FilesSection = () => {
         console.log(files);
     }
 
+    const deleteFiles = () => {
+        setFiles([]);
+    }
     return (
         <div className="w-full h-full py-6 px-10 flex flex-col">
             <div className="flex justify-between items-center">
@@ -22,7 +25,7 @@ const FilesSection = () => {
                             <FaDownload size={18} />
                             <span>Download All</span>
                         </div>
-                        <div className="cursor-pointer text-red-800 flex gap-2 items-center hover:underline active:opacity-60">
+                        <div onClick={deleteFiles} className="cursor-pointer text-red-800 flex gap-2 items-center hover:underline active:opacity-60">
                             <MdDelete size={18} />
                             <span>Delete All</span>
                         </div>

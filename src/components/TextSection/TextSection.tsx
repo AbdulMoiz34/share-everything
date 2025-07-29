@@ -16,9 +16,9 @@ const TextSection = () => {
                 await onValue(ref(db, 'shairing'), (snapshot) => {
                     if (snapshot.val()) {
                         setText(snapshot.val().text || "");
-                    }
-                    if (text) {
-                        setIsSaved(true);
+                        if (snapshot.val().text) {
+                            setIsSaved(true);
+                        }
                     }
                     setLoading(false);
                 });
