@@ -7,5 +7,19 @@ import FilesSection from "./FilesSection";
 import DropZone from "./DropZone";
 import FilesList from "./FilesList";
 import FileCard from "./FileCard";
+import TextArea from "./TextArea";
+import Loader from "./Loader";
 
-export { Header, MainCard, Heading, SideBar, TextSection, FilesSection, DropZone, FilesList, FileCard };
+export {
+    Header,
+    MainCard,
+    Heading,
+    SideBar,
+    TextSection,
+    FilesSection,
+    DropZone,
+    FilesList,
+    FileCard,
+    TextArea,
+    Loader
+};
