@@ -26,7 +26,7 @@ const TextArea = ({ text, onChangeHandler }: TextAreaProps) => {
             onChange={onChangeHandler}
             ref={textArea}
             placeholder="Type something..."
-            className="overflow-hidden mt-6 text-xl outline-none resize-none placeholder: placeholder:font-sans w-full h-full placeholder:text-gray-400">
+            className="overflow-hidden mt-6 text-xl min-h-[250px] outline-none resize-none placeholder: placeholder:font-sans w-full h-full placeholder:text-gray-400">
         </textarea>
     )
 }
