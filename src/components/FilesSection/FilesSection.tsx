@@ -54,11 +54,16 @@ const FilesSection = () => {
         }
     }
 
-    const downloadAllFiles = () => {
-        const res = downloadFiles(files);
-        console.log(res);
+    const downloadAllFiles = async () => {
+        try {
+            const res = await downloadFiles(files);
+            console.log(res);
+
+        } catch (err) {
+            console.log(err);
+        }
     }
-    
+
     return (
         <div className="w-full h-full py-6 px-10 flex flex-col">
             <div className="flex justify-between items-center">

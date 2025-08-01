@@ -37,7 +37,7 @@ const FilesList = ({ onDrop, files, tempFiles }: FilesListProps) => {
             <DropZone
                 onDrop={onDrop}
                 element={
-                    <div className="cursor-pointer w-32 h-32 flex flex-col justify-center items-center text-gray-400">
+                    <div className="cursor-pointer w-32 h-32 flex flex-col justify-center items-center text-gray-400 hover:border-1 hover:border-blue-500">
                         <AiOutlinePlus className="text-[#6968FF] text-3xl" />
                         <b></b>
                         <p className="font-bold text-[#6968FF] p-0 leading-tight mt-2">Add File</p>

@@ -21,7 +21,6 @@ const uploadToCloudinary = async (file: File): Promise<any> => {
         );
         return { url: response.data.secure_url, type: file.type, name: file.name };
     } catch (error) {
-        console.log(error);
         return error;
     }
 };
@@ -43,7 +42,7 @@ const downloadFiles = async (files: FileType[]) => {
             const name = url.substring(url.lastIndexOf('/') + 1);
             zip.file(name, blob);
         } catch (err) {
-            console.error(`Error downloading ${url}:`, err);
+            throw err;
         }
     }
 
@@ -51,7 +50,7 @@ const downloadFiles = async (files: FileType[]) => {
         const zipBlob = await zip.generateAsync({ type: "blob" });
         saveAs(zipBlob, "AllFiles");
     } catch (err) {
-        console.error("Error generating zip:", err);
+        throw err;
     }
 }
 
