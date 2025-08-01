@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { DropZone, FilesList, Heading } from "../../components";
-import { uploadToCloudinary } from "../../helpers";
+import { downloadFiles, uploadToCloudinary } from "../../helpers";
 import { onValue, ref, db, set, remove, } from "../../db";
 import FilesBtns from "../FilesBtns";
 
@@ -25,8 +25,13 @@ const FilesSection = () => {
     }, []);
 
     const onDrop = async (acceptedFiles: File[]) => {
+        console.log(acceptedFiles.length)
+        if (files.length > 10 || (files.length + acceptedFiles.length > 10)) {
+            alert("10 files are allowed.");
+            return;
+        }
         setTempFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
-        
+
         try {
             const promises = acceptedFiles.map((file) => uploadToCloudinary(file));
             const newFiles = await Promise.all(promises);
@@ -40,20 +45,25 @@ const FilesSection = () => {
         }
     }
 
-    const deleteFiles = async () => {
-        setFiles([]);
+    const deleteAllFiles = async () => {
         try {
             await remove(ref(db, 'file-sharing'));
+            setFiles([]);
         } catch (err) {
             console.log("error", err);
         }
     }
 
+    const downloadAllFiles = () => {
+        const res = downloadFiles(files);
+        console.log(res);
+    }
+    
     return (
         <div className="w-full h-full py-6 px-10 flex flex-col">
             <div className="flex justify-between items-center">
                 <Heading text="Files" />
-                {files.length > 0 && <FilesBtns deleteFiles={deleteFiles} />}
+                {files.length > 0 && <FilesBtns downloadAllFiles={downloadAllFiles} deleteFiles={deleteAllFiles} />}
             </div>
             <div className="mt-6 h-9/12">
                 {tempFiles.length || files.length ?

@@ -1,5 +1,7 @@
 import { find } from "linkifyjs";
 import axios from "axios";
+import JSZip from 'jszip';
+import { saveAs } from "file-saver";
 
 const detetectURLS = (text: string): any[] => {
     const links = find(text);
@@ -24,7 +26,37 @@ const uploadToCloudinary = async (file: File): Promise<any> => {
     }
 };
 
+interface FileType {
+    url: string;
+    type: string;
+    name: string;
+}
+
+const downloadFiles = async (files: FileType[]) => {
+    const zip = new JSZip();
+
+    for (const file of files) {
+        const url = file.url;
+        try {
+            const response = await axios.get(url, { responseType: 'blob' });
+            const blob = response.data;
+            const name = url.substring(url.lastIndexOf('/') + 1);
+            zip.file(name, blob);
+        } catch (err) {
+            console.error(`Error downloading ${url}:`, err);
+        }
+    }
+
+    try {
+        const zipBlob = await zip.generateAsync({ type: "blob" });
+        saveAs(zipBlob, "AllFiles");
+    } catch (err) {
+        console.error("Error generating zip:", err);
+    }
+}
+
 export {
     detetectURLS,
-    uploadToCloudinary
+    uploadToCloudinary,
+    downloadFiles
 }
