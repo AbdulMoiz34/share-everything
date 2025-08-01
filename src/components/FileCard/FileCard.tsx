@@ -5,7 +5,11 @@ import { IoLogoJavascript } from "react-icons/io";
 
 
 interface FileCardProps {
-    file: File
+    file: {
+        url: string;
+        type: string;
+        name: string;
+    } | File;
 }
 
 const FileCard = ({ file }: FileCardProps) => {
@@ -23,23 +27,15 @@ const FileCard = ({ file }: FileCardProps) => {
             break;
         default:
             icon = <CiFileOn size={40} />
-
-        // if (file.type.startsWith("image/")) {
-        //     const url = URL.createObjectURL(file);
-        //     icon = <img src={url} alt={file.name} className="w-32 h-32 object-cover" />
-        // } else {
-        //     icon = <CiFileOn size={40} />
-        // }
-
     }
 
     return (
-        <div className="hover:bg-gray-100 px-2 w-32 h-32 flex flex-col justify-center items-center gap-2">
-            {file.type.startsWith("image") ?
-                <img className="object-cover w-full h-full" src={URL.createObjectURL(file)} /> :
+        <div className="hover:bg-gray-100 w-32 h-32 flex flex-col justify-center items-center gap-2 shadow">
+            {file?.type?.startsWith("image") ?
+                <img className="object-cover w-full h-full" src={"url" in file ? file.url : URL.createObjectURL(file as File)} /> :
                 <>
                     {icon}
-                    < p className="text-center text-gray-600 opacity-70 text-sm">{fileName.slice(0, 10)}<b>{fileName.slice(fileName.lastIndexOf("."))}</b></p>
+                    <p className="text-center text-gray-600 opacity-70 text-sm">{fileName.length > 10 ? fileName.slice(0, 10) + "..." : fileName}<b>{fileName.slice(fileName.lastIndexOf("."))}</b></p>
                 </>
             }
         </div >

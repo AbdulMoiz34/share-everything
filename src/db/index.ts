@@ -1,4 +1,4 @@
-import { getDatabase, ref, set, onValue, remove } from "firebase/database";
+import { getDatabase, ref, set, onValue, remove, update } from "firebase/database";
 
 import { initializeApp } from "firebase/app";
 
@@ -20,5 +20,6 @@ export {
     ref,
     set,
     onValue,
-    remove
+    remove,
+    update
 };

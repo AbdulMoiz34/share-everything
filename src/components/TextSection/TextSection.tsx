@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Heading, Loader, TextArea } from "../../components";
-import { db, set, ref, onValue, remove } from "../../db/index";
+import { db, set, ref, onValue, remove } from "../../db";
 import { detetectURLS } from "../../helpers";
 
 const TextSection = () => {
@@ -13,7 +13,7 @@ const TextSection = () => {
         const fetchData = async () => {
             try {
                 setLoading(true);
-                await onValue(ref(db, 'shairing'), (snapshot) => {
+                await onValue(ref(db, 'text-sharing'), (snapshot) => {
                     if (snapshot.val()) {
                         setText(snapshot.val().text || "");
                         setUrls(detetectURLS(snapshot.val().text || ""));
@@ -39,19 +39,18 @@ const TextSection = () => {
         setIsSaved(true);
         setUrls(detetectURLS(text));
         try {
-            await set(ref(db, 'shairing'), { text });
+            await set(ref(db, 'text-sharing'), { text });
         } catch (err) {
             console.log("error", err);
         }
     }
 
-    console.log(urls);
     const clearHandler = async () => {
         setText("");
         setUrls([]);
         setIsSaved(false);
         try {
-            await remove(ref(db, 'shairing'));
+            await remove(ref(db, 'text-sharing'));
         } catch (err) {
             console.log("error", err);
         }

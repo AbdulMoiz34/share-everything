@@ -1,15 +1,38 @@
 import { DropZone, FileCard } from "../../components";
 import { AiOutlinePlus } from "react-icons/ai";
 
-interface FilesListProps {
-    onDrop: (acceptedFiles: File[]) => void;
-    files?: File[];
+interface FileType {
+    url: string;
+    type: string;
+    name: string;
 }
 
-const FilesList = ({ onDrop, files }: FilesListProps) => {
+interface FilesListProps {
+    onDrop: (acceptedFiles: File[]) => void;
+    files: FileType[];
+    tempFiles: File[];
+}
+
+const FilesList = ({ onDrop, files, tempFiles }: FilesListProps) => {
     return (
-        <div className="flex flex-wrap">
-            {files?.map((file, idx) => <FileCard key={idx} file={file} />)}
+        <div className="flex flex-wrap gap-2">
+            {files.map((file, idx) => (
+                <FileCard key={idx} file={file} />
+            ))}
+            {tempFiles.map((tempFile, idx) => {
+                return <div className="rounded-md relative" key={idx}>
+                    <div className="absolute inset-0 flex items-center justify-center z-10">
+                        <div className="flex flex-row gap-2">
+                            <div className="w-2 h-2 rounded-full bg-white animate-bounce [animation-delay:.7s]"></div>
+                            <div className="w-2 h-2 rounded-full bg-white animate-bounce [animation-delay:.3s]"></div>
+                            <div className="w-2 h-2 rounded-full bg-white animate-bounce [animation-delay:.7s]"></div>
+                        </div>
+                    </div>
+                    <div className="brightness-50 bg-black">
+                        <FileCard key={idx} file={tempFile} />
+                    </div>
+                </div>
+            })}
 
             <DropZone
                 onDrop={onDrop}

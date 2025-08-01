@@ -1,40 +1,63 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { DropZone, FilesList, Heading } from "../../components";
-import { MdDelete } from "react-icons/md";
-import { FaDownload } from "react-icons/fa";
+import { uploadToCloudinary } from "../../helpers";
+import { onValue, ref, db, set, remove, } from "../../db";
+import FilesBtns from "../FilesBtns";
 
+interface FileType {
+    url: string;
+    type: string;
+    name: string;
+}
 
 const FilesSection = () => {
-    const [files, setFiles] = useState<File[]>([]);
+    const [tempFiles, setTempFiles] = useState<File[]>([]);
+    const [files, setFiles] = useState<FileType[]>([]);
+    // const [loading, setLoading] = useState<boolean>(false);
 
-    const onDrop = (acceptedFiles: File[]) => {
-        setFiles([...files, ...acceptedFiles]);
-        console.log(files);
+    useEffect(() => {
+        console.log("called");
+        onValue(ref(db, 'file-sharing'), (snapshot) => {
+            if (snapshot.val()) {
+                setFiles(snapshot.val().files || []);
+            }
+        });
+    }, []);
+
+    const onDrop = async (acceptedFiles: File[]) => {
+        setTempFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
+        
+        try {
+            const promises = acceptedFiles.map((file) => uploadToCloudinary(file));
+            const newFiles = await Promise.all(promises);
+            setFiles((prevFiles) => [...prevFiles, ...newFiles]);
+            setTempFiles([]);
+            await set(ref(db, 'file-sharing'), {
+                files: [...files, ...newFiles]
+            });
+        } catch (err) {
+            console.log("Error uploading files:", err);
+        }
     }
 
-    const deleteFiles = () => {
+    const deleteFiles = async () => {
         setFiles([]);
+        try {
+            await remove(ref(db, 'file-sharing'));
+        } catch (err) {
+            console.log("error", err);
+        }
     }
+
     return (
         <div className="w-full h-full py-6 px-10 flex flex-col">
             <div className="flex justify-between items-center">
                 <Heading text="Files" />
-                {files.length > 0 && (
-                    <div className="flex gap-8 text-sm  items-center justify-center">
-                        <div className="cursor-pointer text-blue-500 flex gap-2 items-center hover:underline active:opacity-60">
-                            <FaDownload size={18} />
-                            <span>Download All</span>
-                        </div>
-                        <div onClick={deleteFiles} className="cursor-pointer text-red-800 flex gap-2 items-center hover:underline active:opacity-60">
-                            <MdDelete size={18} />
-                            <span>Delete All</span>
-                        </div>
-                    </div>
-                )}
+                {files.length > 0 && <FilesBtns deleteFiles={deleteFiles} />}
             </div>
             <div className="mt-6 h-9/12">
-                {files.length > 0 ?
-                    <FilesList onDrop={onDrop} files={files} /> :
+                {tempFiles.length || files.length ?
+                    <FilesList onDrop={onDrop} tempFiles={tempFiles} files={files} /> :
                     <DropZone onDrop={onDrop} element={
                         <div className="cursor-pointer hover:bg-gray-50 flex justify-center items-center h-full text-gray-400">
                             <div className="w-3/6 text-center">
