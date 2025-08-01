@@ -14,7 +14,7 @@ interface FileCardProps {
 
 const FileCard = ({ file }: FileCardProps) => {
     let icon;
-    let fileName: string = file.name;
+    const fileName: string = file.name;
     switch (file.type) {
         case "text/html":
             icon = <FaHtml5 size={40} />
