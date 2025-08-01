@@ -1,12 +1,12 @@
 import { find } from "linkifyjs";
 import axios from "axios";
 
-const detetectURLS = (text: string): unknown[] => {
+const detetectURLS = (text: string): any[] => {
     const links = find(text);
     return links.map(link => link.href);
 }
 
-const uploadToCloudinary = async (file: File): Promise<unknown> => {
+const uploadToCloudinary = async (file: File): Promise<any> => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', 'fastshare098121321421');
