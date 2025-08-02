@@ -39,8 +39,7 @@ const downloadFiles = async (files: FileType[]) => {
         try {
             const response = await axios.get(url, { responseType: 'blob' });
             const blob = response.data;
-            const name = url.substring(url.lastIndexOf('/') + 1);
-            zip.file(name, blob);
+            zip.file(file.name, blob);
         } catch (err) {
             throw err;
         }

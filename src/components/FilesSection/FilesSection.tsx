@@ -3,6 +3,8 @@ import { DropZone, FilesList, Heading } from "../../components";
 import { downloadFiles, uploadToCloudinary } from "../../helpers";
 import { onValue, ref, db, set, remove, } from "../../db";
 import FilesBtns from "../FilesBtns";
+import toast from "react-hot-toast";
+import { Link } from "react-router-dom";
 
 interface FileType {
     url: string;
@@ -13,10 +15,8 @@ interface FileType {
 const FilesSection = () => {
     const [tempFiles, setTempFiles] = useState<File[]>([]);
     const [files, setFiles] = useState<FileType[]>([]);
-    // const [loading, setLoading] = useState<boolean>(false);
 
     useEffect(() => {
-        console.log("called");
         onValue(ref(db, 'file-sharing'), (snapshot) => {
             if (snapshot.val()) {
                 setFiles(snapshot.val().files || []);
@@ -25,11 +25,11 @@ const FilesSection = () => {
     }, []);
 
     const onDrop = async (acceptedFiles: File[]) => {
-        console.log(acceptedFiles.length)
         if (files.length > 10 || (files.length + acceptedFiles.length > 10)) {
-            alert("10 files are allowed.");
+            toast.error("10 Files are allowed.");
             return;
         }
+
         setTempFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
 
         try {
@@ -37,11 +37,13 @@ const FilesSection = () => {
             const newFiles = await Promise.all(promises);
             setFiles((prevFiles) => [...prevFiles, ...newFiles]);
             setTempFiles([]);
+            toast.success("Saved.");
             await set(ref(db, 'file-sharing'), {
                 files: [...files, ...newFiles]
             });
+
         } catch (err) {
-            console.log("Error uploading files:", err);
+            toast.error((err as Error).message);
         }
     }
 
@@ -56,11 +58,12 @@ const FilesSection = () => {
 
     const downloadAllFiles = async () => {
         try {
-            const res = await downloadFiles(files);
-            console.log(res);
-
+            let load = toast.loading("Loading...");
+            await downloadFiles(files);
+            toast.dismiss(load);
+            toast.success("Files downloaded successfully.");
         } catch (err) {
-            console.log(err);
+            toast.error("Something went wrong. Try");
         }
     }
 
@@ -75,9 +78,8 @@ const FilesSection = () => {
                     <FilesList onDrop={onDrop} tempFiles={tempFiles} files={files} /> :
                     <DropZone onDrop={onDrop} element={
                         <div className="cursor-pointer hover:bg-gray-50 flex justify-center items-center h-full text-gray-400">
-                            <div className="w-3/6 text-center">
-                                Drag and drop any files up to 2 files, 5Mbs each or <span className="text-[#6868ffb5]">Browse
-                                    Upgrade</span> to get more space
+                            <div className="w-3/6 text-center text-sm">
+                                Drag and drop any files up to <b className="text-blue-800">10</b>. <br />If you want to add more, <Link to={"/login"} className="text-blue-500 font-bold">Login</Link> Please
                             </div>
                         </div>
                     } />

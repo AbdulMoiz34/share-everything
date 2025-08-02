@@ -10,24 +10,17 @@ const TextSection = () => {
     const [urls, setUrls] = useState<string[]>([]);
 
     useEffect(() => {
-        const fetchData = async () => {
-            try {
-                setLoading(true);
-                await onValue(ref(db, 'text-sharing'), (snapshot) => {
-                    if (snapshot.val()) {
-                        setText(snapshot.val().text || "");
-                        setUrls(detetectURLS(snapshot.val().text || ""));
-                        if (snapshot.val().text) {
-                            setIsSaved(true);
-                        }
-                    }
-                    setLoading(false);
-                });
-            } catch (err) {
-                console.log(err);
+        setLoading(true);
+        onValue(ref(db, 'text-sharing'), (snapshot) => {
+            if (snapshot.val()) {
+                setText(snapshot.val().text || "");
+                setUrls(detetectURLS(snapshot.val().text || ""));
+                if (snapshot.val().text) {
+                    setIsSaved(true);
+                }
             }
-        }
-        fetchData();
+            setLoading(false);
+        });
     }, []);
 
     const onChangeHandler = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
