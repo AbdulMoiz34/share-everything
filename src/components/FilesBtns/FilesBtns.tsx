@@ -9,7 +9,7 @@ interface FilesBtnsProps {
 const FilesBtns = ({ deleteFiles, downloadAllFiles }: FilesBtnsProps) => {
     return (
         <div className="flex gap-8 text-sm  items-center justify-center">
-            <button onClick={downloadAllFiles} className="cursor-pointer text-blue-500 flex gap-2 items-center hover:underline active:opacity-60">
+            <button onClick={downloadAllFiles} className="cursor-pointer text-blue-600 flex gap-2 items-center hover:underline active:opacity-60">
                 <FaDownload size={18} />
                 <span>Download All</span>
             </button>

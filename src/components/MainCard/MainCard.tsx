@@ -1,15 +1,7 @@
-import { useState } from "react";
-import { FilesSection, SideBar, TextSection } from "../../components";
-
-const MainCard = () => {
-    const [type, setType] = useState<string>("text");
-
+const MainCard = ({ children }: { children: React.ReactNode }) => {
     return (
-        <div className="bg-white min-w-full min-h-[460px] mt-8 shadow-2xl flex">
-            <SideBar type={type} setType={setType} />
-            <div className="w-full min-h-full">
-                {type == "text" ? <TextSection /> : <FilesSection />}
-            </div>
+        <div className="bg-blue-200 min-w-full min-h-[460px] mt-8 shadow-2xl flex">
+            {children}
         </div>
     )
 }

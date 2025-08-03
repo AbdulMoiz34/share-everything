@@ -77,7 +77,7 @@ const FilesSection = () => {
                 {tempFiles.length || files.length ?
                     <FilesList onDrop={onDrop} tempFiles={tempFiles} files={files} /> :
                     <DropZone onDrop={onDrop} element={
-                        <div className="cursor-pointer hover:bg-gray-50 flex justify-center items-center h-full text-gray-400">
+                        <div className="cursor-pointer hover:border-blue-400 hover:border-1 flex justify-center items-center h-full text-gray-400">
                             <div className="w-3/6 text-center text-sm">
                                 Drag and drop any files up to <b className="text-blue-800">10</b>. <br />If you want to add more, <Link to={"/login"} className="text-blue-500 font-bold">Login</Link> Please
                             </div>

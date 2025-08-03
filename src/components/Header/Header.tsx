@@ -1,25 +1,38 @@
 import { NavLink } from "react-router-dom";
-import Logo from "../../assets/logo.png";
 import { Switch } from "antd";
+import Logo from "../Logo";
+import { FaGithub } from "react-icons/fa";
+
+
+export const getNavLinkClass = ({ isActive }: { isActive: boolean }): string => {
+    return isActive ? 'text-blue-600 font-bold' : 'text-gray-500 hover:text-blue-500';
+};
 
 const Header = () => {
     return (
         <div className="header-bar flex justify-between items-center">
             <div>
-                <img src={Logo} alt="Fast Share Logo." className="w-36 h-36" />
+                <Logo />
             </div>
             <div>
-                <ul className="flex gap-16 items-center justify-center">
-                    <li className="text-gray-500 text-[14px] hover:text-blue-500"><NavLink to={""}>How it works</NavLink></li>
-                    <li className="text-gray-500 text-[14px] hover:text-blue-500"><NavLink to={""}>Download</NavLink></li>
-                    <li className="text-gray-500 text-[14px] hover:text-blue-500"><NavLink to={""}>Upgrade</NavLink></li>
+                <ul className="flex gap-12 items-center justify-center text-sm">
+                    <li>
+                        <NavLink to="/" className={getNavLinkClass}>Home </NavLink>
+                    </li>
+                    <li>
+                        <NavLink to="/howToUse" className={getNavLinkClass}>How to use it </NavLink>
+                    </li>
+
                     <li className="text-blue-500 font-bold text-[14px] hover:text-blue-600"><NavLink to={"login"}>Login / Register</NavLink></li>
+                    <li className="text-gray-500 hover:text-blue-600">
+                        <a href="https://github.com/AbdulMoiz34" target="_blank"><FaGithub size={25} /></a>
+                    </li>
                     <li>
                         <Switch defaultChecked={false} onChange={(checked) => console.log("checked", checked)} />
                     </li>
                 </ul>
             </div>
-        </div>
+        </div >
     );
 }
 

@@ -30,7 +30,7 @@ const FileCard = ({ file }: FileCardProps) => {
     }
 
     return (
-        <a href={"url" in file ? file.url : ""} download target="_blank" className="hover:bg-gray-100 w-32 h-32 flex flex-col justify-center items-center gap-2 shadow">
+        <a href={"url" in file ? file.url : ""} download target="_blank" className="hover:bg-blue-100 w-32 h-32 flex flex-col justify-center items-center gap-2 shadow">
             {file?.type?.startsWith("image") ?
                 <img className="object-cover w-full h-full" src={"url" in file ? file.url : URL.createObjectURL(file as File)} /> :
                 <>

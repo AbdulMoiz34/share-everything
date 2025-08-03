@@ -62,7 +62,7 @@ const TextSection = () => {
                     <TextArea text={text} onChangeHandler={onChangeHandler} />
                     <div className="flex w-full justify-end gap-18 my-4">
                         {text && <button className="cursor-pointer text-xs" onClick={clearHandler}>Clear</button>}
-                        <button disabled={!text} onClick={isSaved ? copyToClipboard : saveHandler} className={`disabled:opacity-20 disabled:cursor-default border-2 px-16 py-2 text-xl italic font-[900] cursor-pointer transition duration-100 ${text && "hover:text-[#646EFF]"}`}>{isSaved ? "Copy" : "Save"}</button>
+                        <button disabled={!text} onClick={isSaved ? copyToClipboard : saveHandler} className={`disabled:opacity-20 disabled:cursor-default border-2 px-16 py-2 text-xl italic font-[900] cursor-pointer transition duration-100 ${text && "hover:text-blue-600"}`}>{isSaved ? "Copy" : "Save"}</button>
                     </div>
                     <div className="links w-10/12">
 

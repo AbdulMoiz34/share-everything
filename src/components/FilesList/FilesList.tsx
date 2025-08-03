@@ -41,7 +41,7 @@ const FilesList = ({ onDrop, files, tempFiles }: FilesListProps) => {
                         <AiOutlinePlus className="text-[#6968FF] text-3xl" />
                         <b></b>
                         <p className="font-bold text-[#6968FF] p-0 leading-tight mt-2">Add File</p>
-                        <p className="m-0 p-0 text-xs leading-none">(upto 5Mb)</p>
+                        <p className="m-0 p-0 text-xs leading-none">(10) Files</p>
                     </div>
                 }
             />

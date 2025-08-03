@@ -1,10 +1,14 @@
-import { Header, MainCard } from "../../components";
+import { useState } from "react";
+import { FilesSection, Header, MainCard, SideBar, TextSection } from "../../components";
 
 const Home = () => {
+    const [type, setType] = useState<"text" | "files">("text");
     return (
-        <div className="w-4/5 mx-auto mt-4 pb-12">
-            <Header />
-            <MainCard />
+        <div className="w-full mx-auto flex">
+            <SideBar type={type} setType={setType} />
+            <div className="w-full min-h-full">
+                {type == "text" ? <TextSection /> : <FilesSection />}
+            </div>
         </div>
     )
 }
