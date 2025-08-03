@@ -4,7 +4,7 @@ import Logo from "../Logo";
 import { FaGithub } from "react-icons/fa";
 
 
-export const getNavLinkClass = ({ isActive }: { isActive: boolean }): string => {
+const getNavLinkClass = ({ isActive }: { isActive: boolean }): string => {
     return isActive ? 'text-blue-600 font-bold' : 'text-gray-500 hover:text-blue-500';
 };
 

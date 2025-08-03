@@ -36,22 +36,14 @@ const downloadFiles = async (files: FileType[]) => {
 
     for (const file of files) {
         const url = file.url;
-        try {
-            const response = await axios.get(url, { responseType: 'blob' });
-            const blob = response.data;
-            zip.file(file.name, blob);
-        } catch (err) {
-            throw err;
-        }
+        const response = await axios.get(url, { responseType: 'blob' });
+        const blob = response.data;
+        zip.file(file.name, blob);
     }
 
-    try {
-        const zipBlob = await zip.generateAsync({ type: "blob" });
-        saveAs(zipBlob, "AllFiles");
-    } catch (err) {
-        throw err;
-    }
-}
+    const zipBlob = await zip.generateAsync({ type: "blob" });
+    saveAs(zipBlob, "AllFiles");
+};
 
 export {
     detetectURLS,

@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { FilesSection, Header, MainCard, SideBar, TextSection } from "../../components";
+import { FilesSection, SideBar, TextSection } from "../../components";
 
 const Home = () => {
     const [type, setType] = useState<"text" | "files">("text");

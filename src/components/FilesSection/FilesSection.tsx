@@ -58,11 +58,12 @@ const FilesSection = () => {
 
     const downloadAllFiles = async () => {
         try {
-            let load = toast.loading("Loading...");
+            const load = toast.loading("Loading...");
             await downloadFiles(files);
             toast.dismiss(load);
             toast.success("Files downloaded successfully.");
-        } catch (err) {
+        } catch (_err) {
+            console.log(_err);
             toast.error("Something went wrong. Try");
         }
     }
