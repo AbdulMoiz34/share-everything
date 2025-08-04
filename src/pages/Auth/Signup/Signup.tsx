@@ -10,7 +10,7 @@ type FormData = {
     password: string;
 };
 
-const Login = () => {
+const Signup = () => {
     const {
         control,
         handleSubmit,
@@ -28,7 +28,7 @@ const Login = () => {
     return (
         <div className="flex justify-center items-center w-full">
             <div className="w-full max-w-md bg-transparent rounded-xl p-8 space-y-6">
-                <Heading text="Login" />
+                <Heading text="Sign Up" />
                 <Form layout="vertical" onFinish={handleSubmit(onSubmit)} className="space-y-4">
                     <Form.Item
                         label="Email"
@@ -109,11 +109,11 @@ const Login = () => {
 
                     <Form.Item >
                         <Button size="large" type="primary" htmlType="submit" className="w-full mt-4">
-                            Login
+                            Sign Up
                         </Button>
                     </Form.Item>
                 </Form>
-                <div className="text-center text-gray-800">Don't have an account? <Link to="/signup" className="text-blue-500 hover:underline hover:text-blue-700">Signup</Link></div>
+                <div className="text-center text-gray-800">Already have an account? <Link to="/login" className="text-blue-500 hover:underline hover:text-blue-700">Login</Link></div>
                 <Divider>or</Divider>
                 <Button
                     size="large"
@@ -122,11 +122,11 @@ const Login = () => {
                     className="w-full"
                     onClick={handleGoogleLogin}
                 >
-                    Sign in with Google
+                    Sign up with Google
                 </Button>
             </div>
         </div>
     );
 };
 
-export default Login;
+export default Signup;
