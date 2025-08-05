@@ -8,7 +8,6 @@ import DropZone from "./DropZone";
 import FilesList from "./FilesList";
 import FileCard from "./FileCard";
 import TextArea from "./TextArea";
-import Loader from "./Loader";
 import NetworkStatus from "./NetworkStatus";
 
 export {
@@ -22,6 +21,5 @@ export {
     FilesList,
     FileCard,
     TextArea,
-    Loader,
     NetworkStatus
 };

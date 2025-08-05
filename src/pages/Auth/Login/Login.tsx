@@ -31,8 +31,6 @@ const Login = () => {
             toast.success("you're loggedIn");
             setTimeout(() => navigate("/"), 700);
         } catch (err) {
-            console.log(err);
-            console.log(err);
             toast.error("Password or Email can be wrong.");
         } finally {
             setLoading(false);

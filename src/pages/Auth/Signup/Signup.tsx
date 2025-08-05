@@ -31,7 +31,6 @@ const Signup = () => {
             toast.success("you're loggedIn");
             setTimeout(() => navigate("/"), 700);
         } catch (err) {
-            console.log(err);
             toast.error("Something went wrong.");
         } finally {
             setLoading(false);

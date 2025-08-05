@@ -15,7 +15,6 @@ const getNavLinkClass = ({ isActive }: { isActive: boolean }): string => {
 
 const Header = () => {
     const { user, setUser } = useContext(AuthContext);
-    console.log(user);
 
     const signoutHandler = async () => {
         try {

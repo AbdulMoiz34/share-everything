@@ -1,7 +1,11 @@
 import { useEffect, useState } from "react";
-import { Heading, Loader, TextArea } from "../../components";
+import { Heading, TextArea } from "../../components";
 import { db, set, ref, onValue, remove } from "../../firebase";
 import { detetectURLS } from "../../helpers";
+import { Spin } from "antd";
+import { LoadingOutlined } from '@ant-design/icons';
+import toast from "react-hot-toast";
+
 
 const TextSection = () => {
     const [text, setText] = useState<string>("");
@@ -30,7 +34,6 @@ const TextSection = () => {
 
     let id: any;
     const saveHandler = async () => {
-        console.log(id);
         clearTimeout(id);
         setIsSaved(true);
         setUrls(detetectURLS(text));
@@ -38,7 +41,7 @@ const TextSection = () => {
         try {
             await set(ref(db, 'text-sharing'), { text });
         } catch (err) {
-            console.log("error", err);
+            toast.error("something went wrong.");
         }
     }
 
@@ -49,7 +52,7 @@ const TextSection = () => {
         try {
             await remove(ref(db, 'text-sharing'));
         } catch (err) {
-            console.log("error", err);
+            toast.error("something went wrong.");
         }
     }
 
@@ -60,7 +63,10 @@ const TextSection = () => {
     return (
         <div className="text-sec w-[92.85%] box-border h-full py-6 px-10 flex flex-col relative pr-0">
             {loading ?
-                <Loader /> :
+                <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
+                    <Spin indicator={<LoadingOutlined spin />} size="large" />
+                </div>
+                :
                 <>
                     <Heading text="Text" />
                     <TextArea text={text} onChangeHandler={onChangeHandler} />
