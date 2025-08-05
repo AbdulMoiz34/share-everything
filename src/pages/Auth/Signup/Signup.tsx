@@ -3,7 +3,11 @@ import { useForm, type SubmitHandler, Controller } from "react-hook-form";
 import { Button, Form, Divider } from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
 import { MdEmail } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { auth, createUserWithEmailAndPassword } from "../../../firebase";
+import { useState } from "react";
+import toast from "react-hot-toast";
+import { googleLogin } from "../../../helpers";
 
 type FormData = {
     email: string;
@@ -17,14 +21,35 @@ const Signup = () => {
         formState: { errors },
     } = useForm<FormData>();
 
-    const onSubmit: SubmitHandler<FormData> = (data) => {
-        console.log("Form Data:", data);
+    const [loading, setLoading] = useState<boolean>(false);
+    const navigate = useNavigate();
+
+    const onSubmit: SubmitHandler<FormData> = async ({ email, password }) => {
+        try {
+            setLoading(true);
+            await createUserWithEmailAndPassword(auth, email, password);
+            toast.success("you're loggedIn");
+            setTimeout(() => navigate("/"), 700);
+        } catch (err) {
+            console.log(err);
+            toast.error("Something went wrong.");
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleGoogleLogin = () => {
-        console.log("Google login triggered");
-    };
-
+    const googleLoginHandler = async () => {
+        try {
+            setLoading(true);
+            await googleLogin();
+            setTimeout(() => navigate("/"), 700);
+        } catch (err) {
+            toast.error("Failed. Try Again.");
+        }finally {
+            setLoading(false);
+        }
+    }
+    
     return (
         <div className="flex justify-center items-center w-full">
             <div className="w-full max-w-md bg-transparent rounded-xl p-8 space-y-6">
@@ -83,15 +108,16 @@ const Signup = () => {
                             name="password"
                             control={control}
                             rules={{
-                                required: "Email is required",
+                                required: "Password is required",
                                 pattern: {
-                                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                    message: "Enter a valid email",
+                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,14}$/,
+                                    message: "one capital & one small letter, one digit and greater than 7 chars.",
                                 },
                             }}
                             render={({ field }) => (
                                 <div className="relative w-full">
                                     <input
+                                        type="password"
                                         {...field}
                                         placeholder="Enter your email"
                                         className={`w-full border-0 border-b ${errors.email ? "!border-red-500" : "border-gray-400"
@@ -108,7 +134,7 @@ const Signup = () => {
                     </Form.Item>
 
                     <Form.Item >
-                        <Button size="large" type="primary" htmlType="submit" className="w-full mt-4">
+                        <Button loading={loading} size="large" type="primary" htmlType="submit" className="cursor-pointer w-full mt-4">
                             Sign Up
                         </Button>
                     </Form.Item>
@@ -116,11 +142,12 @@ const Signup = () => {
                 <div className="text-center text-gray-800">Already have an account? <Link to="/login" className="text-blue-500 hover:underline hover:text-blue-700">Login</Link></div>
                 <Divider>or</Divider>
                 <Button
+                    disabled={loading}
                     size="large"
                     icon={<GoogleOutlined />}
                     type="default"
                     className="w-full"
-                    onClick={handleGoogleLogin}
+                    onClick={googleLoginHandler}
                 >
                     Sign up with Google
                 </Button>

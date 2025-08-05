@@ -28,7 +28,7 @@ const features = [
     {
         icon: <FiShield className="w-6 h-6 text-blue-600" />,
         title: 'Private & Temporary Sharing',
-        description: 'Your files and text are encrypted and auto-expire — only accessible to users with the link.',
+        description: 'Your files and text are encrypted and auto-expire in 30mins — only accessible to users with the link.',
     },
 ];
 

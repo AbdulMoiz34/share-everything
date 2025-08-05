@@ -1,10 +1,12 @@
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { DropZone, FilesList, Heading } from "../../components";
 import { downloadFiles, uploadToCloudinary } from "../../helpers";
-import { onValue, ref, db, set, remove, } from "../../db";
+import { onValue, ref, db, set, remove, } from "../../firebase";
 import FilesBtns from "../FilesBtns";
 import toast from "react-hot-toast";
 import { Link } from "react-router-dom";
+import AuthContext from "../../context";
+import { LuFileStack } from "react-icons/lu";
 
 interface FileType {
     url: string;
@@ -15,6 +17,7 @@ interface FileType {
 const FilesSection = () => {
     const [tempFiles, setTempFiles] = useState<File[]>([]);
     const [files, setFiles] = useState<FileType[]>([]);
+    const { user } = useContext(AuthContext);
 
     useEffect(() => {
         onValue(ref(db, 'file-sharing'), (snapshot) => {
@@ -24,12 +27,12 @@ const FilesSection = () => {
         });
     }, []);
 
+    let id: any;
     const onDrop = async (acceptedFiles: File[]) => {
-        if (files.length > 10 || (files.length + acceptedFiles.length > 10)) {
-            toast.error("10 Files are allowed.");
+        if (!user && (files.length > 10 || (files.length + acceptedFiles.length > 10))) {
+            toast.error("Login required.");
             return;
         }
-
         setTempFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
 
         try {
@@ -37,13 +40,14 @@ const FilesSection = () => {
             const newFiles = await Promise.all(promises);
             setFiles((prevFiles) => [...prevFiles, ...newFiles]);
             setTempFiles([]);
-            toast.success("Saved.");
             await set(ref(db, 'file-sharing'), {
                 files: [...files, ...newFiles]
             });
-
+            toast.success("Saved.");
+            clearTimeout(id);
+            id = setTimeout(deleteAllFiles, 1_8_00_000); // file will be removed after 30mins
         } catch (err) {
-            toast.error((err as Error).message);
+            toast.error("something went wrong.");
         }
     }
 
@@ -57,6 +61,10 @@ const FilesSection = () => {
     }
 
     const downloadAllFiles = async () => {
+        if (!user) {
+            toast.error("Login is required.");
+            return;
+        }
         try {
             const load = toast.loading("Loading...");
             await downloadFiles(files);
@@ -78,10 +86,10 @@ const FilesSection = () => {
                 {tempFiles.length || files.length ?
                     <FilesList onDrop={onDrop} tempFiles={tempFiles} files={files} /> :
                     <DropZone onDrop={onDrop} element={
-                        <div className="cursor-pointer hover:border-blue-400 hover:border-1 flex justify-center items-center h-full text-gray-400">
-                            <div className="w-3/6 text-center text-sm">
+                        <div className="cursor-pointer hover:border-blue-400 hover:border-1 flex justify-center items-center h-full text-blue-800">
+                            {user ? <div className="text-xs flex flex-col justify-center items-center gap-2"><LuFileStack className="text-4xl" /> Drag and drop any files.</div> : <div className="w-3/6 text-center text-sm">
                                 Drag and drop any files up to <b className="text-blue-800">10</b>. <br />If you want to add more, <Link to={"/login"} className="text-blue-500 font-bold">Login</Link> Please
-                            </div>
+                            </div>}
                         </div>
                     } />
                 }

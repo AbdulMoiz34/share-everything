@@ -1,7 +1,12 @@
 import { NavLink } from "react-router-dom";
-import { Switch } from "antd";
+import { Switch, Tooltip } from "antd";
 import Logo from "../Logo";
 import { FaGithub } from "react-icons/fa";
+import { useContext } from "react";
+import AuthContext from "../../context";
+import { signOut } from "firebase/auth";
+import { auth } from "../../firebase";
+import toast from "react-hot-toast";
 
 
 const getNavLinkClass = ({ isActive }: { isActive: boolean }): string => {
@@ -9,6 +14,19 @@ const getNavLinkClass = ({ isActive }: { isActive: boolean }): string => {
 };
 
 const Header = () => {
+    const { user, setUser } = useContext(AuthContext);
+    console.log(user);
+
+    const signoutHandler = async () => {
+        try {
+            await signOut(auth);
+            setUser(null);
+            toast.success("User signed out.");
+        } catch (err) {
+            toast.error("Error in signing out.");
+        }
+    }
+
     return (
         <div className="header-bar flex justify-between items-center">
             <div>
@@ -23,7 +41,14 @@ const Header = () => {
                         <NavLink to="/howToUse" className={getNavLinkClass}>How to use it </NavLink>
                     </li>
 
-                    <li className="text-blue-500 font-bold text-[14px] hover:text-blue-600"><NavLink to={"login"}>Login / Register</NavLink></li>
+                    <li className="text-blue-500 font-bold text-[14px] hover:text-blue-600">
+                        {user ?
+                            <Tooltip placement="bottom" title="Are you sure?">
+                                <button className="cursor-pointer" onClick={signoutHandler}>Log Out</button>
+                            </Tooltip> :
+                            <NavLink to={"login"}>Login / Register</NavLink>}
+                    </li>
+
                     <li className="text-gray-500 hover:text-blue-600">
                         <a href="https://github.com/AbdulMoiz34" target="_blank"><FaGithub size={25} /></a>
                     </li>

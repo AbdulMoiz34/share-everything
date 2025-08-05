@@ -3,7 +3,11 @@ import { useForm, type SubmitHandler, Controller } from "react-hook-form";
 import { Button, Form, Divider } from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
 import { MdEmail } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { auth, signInWithEmailAndPassword, } from "../../../firebase/";
+import toast from "react-hot-toast";
+import { googleLogin } from "../../../helpers";
 
 type FormData = {
     email: string;
@@ -17,12 +21,34 @@ const Login = () => {
         formState: { errors },
     } = useForm<FormData>();
 
-    const onSubmit: SubmitHandler<FormData> = (data) => {
-        console.log("Form Data:", data);
+    const [loading, setLoading] = useState<boolean>(false);
+    const navigate = useNavigate();
+
+    const onSubmit: SubmitHandler<FormData> = async ({ email, password }) => {
+        try {
+            setLoading(true);
+            await signInWithEmailAndPassword(auth, email, password);
+            toast.success("you're loggedIn");
+            setTimeout(() => navigate("/"), 700);
+        } catch (err) {
+            console.log(err);
+            console.log(err);
+            toast.error("Password or Email can be wrong.");
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleGoogleLogin = () => {
-        console.log("Google login triggered");
+    const handleGoogleLogin = async () => {
+        try {
+            setLoading(true);
+            await googleLogin();
+            setTimeout(() => navigate("/"), 700);
+        } catch (err) {
+            toast.error("Failed. Try Again.");
+        } finally {
+            setLoading(false);
+        }
     };
 
     return (
@@ -82,18 +108,11 @@ const Login = () => {
                         <Controller
                             name="password"
                             control={control}
-                            rules={{
-                                required: "Email is required",
-                                pattern: {
-                                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                    message: "Enter a valid email",
-                                },
-                            }}
                             render={({ field }) => (
                                 <div className="relative w-full">
                                     <input
                                         {...field}
-                                        placeholder="Enter your email"
+                                        placeholder="Enter your password"
                                         className={`w-full border-0 border-b ${errors.email ? "!border-red-500" : "border-gray-400"
                                             } focus:border-blue-500 focus:outline-none py-2 text-base bg-transparent pr-8`}
                                     />
@@ -108,7 +127,7 @@ const Login = () => {
                     </Form.Item>
 
                     <Form.Item >
-                        <Button size="large" type="primary" htmlType="submit" className="w-full mt-4">
+                        <Button loading={loading} size="large" type="primary" htmlType="submit" className="w-full mt-4">
                             Login
                         </Button>
                     </Form.Item>
@@ -116,6 +135,7 @@ const Login = () => {
                 <div className="text-center text-gray-800">Don't have an account? <Link to="/signup" className="text-blue-500 hover:underline hover:text-blue-700">Signup</Link></div>
                 <Divider>or</Divider>
                 <Button
+                    disabled={loading}
                     size="large"
                     icon={<GoogleOutlined />}
                     type="default"

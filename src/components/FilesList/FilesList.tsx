@@ -1,5 +1,7 @@
+import { useContext } from "react";
 import { DropZone, FileCard } from "../../components";
 import { AiOutlinePlus } from "react-icons/ai";
+import AuthContext from "../../context";
 
 interface FileType {
     url: string;
@@ -14,6 +16,8 @@ interface FilesListProps {
 }
 
 const FilesList = ({ onDrop, files, tempFiles }: FilesListProps) => {
+    const { user } = useContext(AuthContext);
+
     return (
         <div className="flex flex-wrap gap-2">
             {files.map((file, idx) => (
@@ -40,8 +44,8 @@ const FilesList = ({ onDrop, files, tempFiles }: FilesListProps) => {
                     <div className="cursor-pointer w-32 h-32 flex flex-col justify-center items-center text-gray-400 hover:border-1 hover:border-blue-500">
                         <AiOutlinePlus className="text-[#6968FF] text-3xl" />
                         <b></b>
-                        <p className="font-bold text-[#6968FF] p-0 leading-tight mt-2">Add File</p>
-                        <p className="m-0 p-0 text-xs leading-none">(10) Files</p>
+                        <p className="font-bold text-[#6968FF] p-0 leading-tight mt-2">Add Files</p>
+                        <p className="m-0 p-0 text-xs leading-none text-blue-600">{user ? "No Limit" : "(10) Files"}</p>
                     </div>
                 }
             />

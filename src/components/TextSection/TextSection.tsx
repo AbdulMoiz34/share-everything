@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Heading, Loader, TextArea } from "../../components";
-import { db, set, ref, onValue, remove } from "../../db";
+import { db, set, ref, onValue, remove } from "../../firebase";
 import { detetectURLS } from "../../helpers";
 
 const TextSection = () => {
@@ -28,9 +28,13 @@ const TextSection = () => {
         setText(e.target.value);
     }
 
+    let id: any;
     const saveHandler = async () => {
+        console.log(id);
+        clearTimeout(id);
         setIsSaved(true);
         setUrls(detetectURLS(text));
+        id = setTimeout(clearHandler, 1_8_00_000); // text will be removed after 30mins
         try {
             await set(ref(db, 'text-sharing'), { text });
         } catch (err) {

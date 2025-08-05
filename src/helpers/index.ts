@@ -2,6 +2,7 @@ import { find } from "linkifyjs";
 import axios from "axios";
 import JSZip from 'jszip';
 import { saveAs } from "file-saver";
+import { auth, googleProvider, signInWithPopup } from "../firebase/";
 
 const detetectURLS = (text: string): any[] => {
     const links = find(text);
@@ -45,8 +46,17 @@ const downloadFiles = async (files: FileType[]) => {
     saveAs(zipBlob, "AllFiles");
 };
 
+const googleLogin = async () => {
+    try {
+        await signInWithPopup(auth, googleProvider);
+    } catch (err) {
+        throw err;
+    }
+};
+
 export {
     detetectURLS,
     uploadToCloudinary,
-    downloadFiles
+    downloadFiles,
+    googleLogin
 }
