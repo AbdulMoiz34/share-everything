@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { Heading, TextArea } from "../../components";
-import { db, set, ref, onValue, remove } from "../../firebase";
+import { db, ref, onValue, remove, update } from "../../firebase";
 import { detetectURLS } from "../../helpers";
 import { Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
 import toast from "react-hot-toast";
+import { useParams } from "react-router-dom";
 
 
 const TextSection = () => {
@@ -12,10 +13,12 @@ const TextSection = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [isSaved, setIsSaved] = useState<boolean>(false);
     const [urls, setUrls] = useState<string[]>([]);
+    const { id } = useParams();
+    console.log(id);
 
     useEffect(() => {
         setLoading(true);
-        onValue(ref(db, 'text-sharing'), (snapshot) => {
+        onValue(ref(db, `shares/${id}`), (snapshot) => {
             if (snapshot.val()) {
                 setText(snapshot.val().text || "");
                 setUrls(detetectURLS(snapshot.val().text || ""));
@@ -32,14 +35,18 @@ const TextSection = () => {
         setText(e.target.value);
     }
 
-    let id: ReturnType<typeof setTimeout>;
+    let timeoutId: ReturnType<typeof setTimeout>;
     const saveHandler = async () => {
-        clearTimeout(id);
+        if (!id) {
+            toast.error("Generate URL Please.");
+            return;
+        }
+        clearTimeout(timeoutId);
         setIsSaved(true);
         setUrls(detetectURLS(text));
-        id = setTimeout(clearHandler, 1_8_00_000);
+        timeoutId = setTimeout(clearHandler, 1_8_00_000);
         try {
-            await set(ref(db, 'text-sharing'), { text });
+            await update(ref(db, `shares/${id}`), { text });
         } catch (err) {
             toast.error("something went wrong.");
         }
@@ -50,7 +57,7 @@ const TextSection = () => {
         setUrls([]);
         setIsSaved(false);
         try {
-            await remove(ref(db, 'text-sharing'));
+            await remove(ref(db, `shares/${id}`));
         } catch (err) {
             toast.error("something went wrong.");
         }

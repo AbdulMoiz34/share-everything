@@ -1,9 +1,9 @@
 import { NavLink } from "react-router-dom";
-import { Switch, Tooltip } from "antd";
+import { Tooltip } from "antd";
 import Logo from "../Logo";
 import { FaGithub } from "react-icons/fa";
 import { useContext } from "react";
-import AuthContext from "../../context";
+import { AuthContext } from "../../context";
 import { signOut } from "firebase/auth";
 import { auth } from "../../firebase";
 import toast from "react-hot-toast";
@@ -50,9 +50,6 @@ const Header = () => {
 
                     <li className="text-gray-500 hover:text-blue-600">
                         <a href="https://github.com/AbdulMoiz34" target="_blank"><FaGithub size={25} /></a>
-                    </li>
-                    <li>
-                        <Switch defaultChecked={false} onChange={(checked) => console.log("checked", checked)} />
                     </li>
                 </ul>
             </div>

@@ -2,7 +2,7 @@ import { Toaster } from "react-hot-toast";
 import Router from "./config/Router";
 import { NetworkStatus, Header, MainCard } from "./components";
 import { auth, onAuthStateChanged } from "./firebase/index";
-import AuthContext from "./context";
+import { AuthContext } from "./context";
 import type { User } from "./context/AuthContext";
 import { useEffect, useState } from "react";
 import { Spin } from "antd";
