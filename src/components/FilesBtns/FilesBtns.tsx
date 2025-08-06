@@ -3,7 +3,7 @@ import { FaDownload } from "react-icons/fa";
 
 interface FilesBtnsProps {
     deleteFiles: () => Promise<void>;
-    downloadAllFiles: () => any;
+    downloadAllFiles: () => Promise<void>;
 }
 
 const FilesBtns = ({ deleteFiles, downloadAllFiles }: FilesBtnsProps) => {

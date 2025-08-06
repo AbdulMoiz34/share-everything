@@ -4,12 +4,18 @@ import JSZip from 'jszip';
 import { saveAs } from "file-saver";
 import { auth, googleProvider, signInWithPopup } from "../firebase/";
 
-const detetectURLS = (text: string): any[] => {
+const detetectURLS = (text: string): string[] => {
     const links = find(text);
     return links.map(link => link.href);
 }
 
-const uploadToCloudinary = async (file: File): Promise<any> => {
+interface UploadedFile {
+    url: string;
+    type: string;
+    name: string;
+}
+
+const uploadToCloudinary = async (file: File): Promise<UploadedFile> => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', 'fastshare098121321421');
@@ -21,8 +27,8 @@ const uploadToCloudinary = async (file: File): Promise<any> => {
             formData
         );
         return { url: response.data.secure_url, type: file.type, name: file.name };
-    } catch (error) {
-        return error;
+    } catch (error: unknown) {
+        throw new Error("Upload Failed.");
     }
 };
 
@@ -47,11 +53,7 @@ const downloadFiles = async (files: FileType[]) => {
 };
 
 const googleLogin = async () => {
-    try {
-        await signInWithPopup(auth, googleProvider);
-    } catch (err) {
-        throw err;
-    }
+    await signInWithPopup(auth, googleProvider);
 };
 
 export {

@@ -32,12 +32,12 @@ const TextSection = () => {
         setText(e.target.value);
     }
 
-    let id: any;
+    let id: ReturnType<typeof setTimeout>;
     const saveHandler = async () => {
         clearTimeout(id);
         setIsSaved(true);
         setUrls(detetectURLS(text));
-        id = setTimeout(clearHandler, 1_8_00_000); // text will be removed after 30mins
+        id = setTimeout(clearHandler, 1_8_00_000);
         try {
             await set(ref(db, 'text-sharing'), { text });
         } catch (err) {

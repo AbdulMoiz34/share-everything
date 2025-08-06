@@ -31,7 +31,7 @@ const FilesSection = () => {
         });
     }, []);
 
-    let id: any;
+    let id: ReturnType<typeof setTimeout>;
     const onDrop = async (acceptedFiles: File[]) => {
         if (!user && (files.length > 10 || (files.length + acceptedFiles.length > 10))) {
             toast.error("Login required.");
@@ -50,7 +50,7 @@ const FilesSection = () => {
             toast.success("Saved.");
             clearTimeout(id);
             id = setTimeout(deleteAllFiles, 1_8_00_000); // file will be removed after 30mins
-        } catch (err) {
+        } catch (err: unknown) {
             toast.error("something went wrong.");
         }
     }
