@@ -15,7 +15,9 @@ const getNavLinkClass = ({ isActive }: { isActive: boolean }): string => {
 
 const Header = () => {
     const { user, setUser } = useContext(AuthContext);
-
+    let id: string | null = null;
+    id = localStorage.getItem("id");
+    
     const signoutHandler = async () => {
         try {
             await signOut(auth);
@@ -39,7 +41,7 @@ const Header = () => {
             <div className="hidden sm:block">
                 <ul className="items-center justify-center text-sm flex gap-8 md:gap-12">
                     <li>
-                        <NavLink to="/" className={getNavLinkClass}>Home </NavLink>
+                        <NavLink to={`${id ? `/view/${id}` : "/"}`} className={getNavLinkClass}>Home </NavLink>
                     </li>
                     <li>
                         <NavLink to="/howToUse" className={getNavLinkClass}>How to use it </NavLink>

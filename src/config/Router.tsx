@@ -6,6 +6,7 @@ import { AuthContext } from "../context";
 
 const Router = () => {
     const { user } = useContext(AuthContext);
+    
     return (
         <Routes>
             <Route path="/" element={<Home />} />
