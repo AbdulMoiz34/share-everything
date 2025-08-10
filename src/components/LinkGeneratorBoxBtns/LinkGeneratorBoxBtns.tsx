@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { LinkGeneratorButton } from "../../components/";
+import { DeleteBtn, LinkGeneratorButton } from "../../components/";
 import toast from "react-hot-toast";
 import { db, ref, remove } from "../../firebase";
 import { useNavigate } from "react-router-dom";
@@ -18,7 +18,7 @@ const LinkGeneratorBoxBtns = ({ id, setId }: LinkGeneratorBoxBtnsProps) => {
         toast.success("Generated.");
     };
 
-    const cancelHandler = async () => {
+    const deleteHandler = async () => {
         localStorage.removeItem("id");
         setId("");
         navigate("");
@@ -44,7 +44,7 @@ const LinkGeneratorBoxBtns = ({ id, setId }: LinkGeneratorBoxBtnsProps) => {
     return (
         <div className="flex gap-4">
             <LinkGeneratorButton text="Generate" onClick={generateId} disabled={!!id.length} />
-            <LinkGeneratorButton text="Cancel" onClick={cancelHandler} disabled={!id.length} />
+            <DeleteBtn id={id} deleteHandler={deleteHandler}/>
             <LinkGeneratorButton text="Save" onClick={saveHandler} disabled={!id.length} />
             <LinkGeneratorButton text="Copy" onClick={copyUrlHandler} disabled={!id.length} />
         </ div>

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { Heading, TextArea } from "../../components";
-import { db, ref, onValue, update } from "../../firebase";
+import { db, ref, onValue, update, analytics } from "../../firebase";
 import { detetectURLS } from "../../helpers";
 import { Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
 import toast from "react-hot-toast";
 import { useParams } from "react-router-dom";
+import { logEvent } from "firebase/analytics";
 
 
 const TextSection = () => {
@@ -36,6 +37,9 @@ const TextSection = () => {
 
     let timeoutId: ReturnType<typeof setTimeout>;
     const saveHandler = async () => {
+        logEvent(analytics, "text_saved", {
+            saved_at: new Date().toISOString()
+        });
         if (!id) {
             toast.error("Generate URL Please.");
             return;
@@ -80,7 +84,7 @@ const TextSection = () => {
                 <>
                     <Heading text="Text" />
                     <TextArea text={text} onChangeHandler={onChangeHandler} />
-                    <div className="flex w-full justify-end gap-18 my-4">
+                    <div className="flex w-full justify-end gap-4 sm:gap-18 my-4 flex-col sm:flex-row">
                         {text && <button className="cursor-pointer text-xs" onClick={clearHandler}>Clear</button>}
                         <button disabled={!text} onClick={isSaved ? copyToClipboard : saveHandler} className={`disabled:opacity-20 disabled:cursor-default border-2 px-16 py-2 text-xl italic font-[900] cursor-pointer transition duration-100 ${text && "hover:text-blue-600"}`}>{isSaved ? "Copy" : "Save"}</button>
                     </div>

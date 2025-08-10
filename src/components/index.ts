@@ -15,6 +15,8 @@ import ShareBtnsModal from "./ShareBtnsModal";
 import ShareButton from "./ShareButton";
 import LinkGeneratorBoxBtns from "./LinkGeneratorBoxBtns";
 import LinkGeneratorButton from "./LinkGeneratorBoxBtn";
+import DeleteBtn from "./DeleteButton";
+import Footer from "./Footer";
 
 export {
     Header,
@@ -33,5 +35,7 @@ export {
     ShareBtnsModal,
     ShareButton,
     LinkGeneratorBoxBtns,
-    LinkGeneratorButton
+    LinkGeneratorButton,
+    DeleteBtn,
+    Footer
 };

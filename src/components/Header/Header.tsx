@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
 import { Tooltip } from "antd";
 import Logo from "../Logo";
-import { FaGithub } from "react-icons/fa";
+import { FaBars, FaGithub } from "react-icons/fa";
 import { useContext } from "react";
 import { AuthContext } from "../../context";
 import { signOut } from "firebase/auth";
@@ -32,7 +32,12 @@ const Header = () => {
                 <Logo />
             </div>
             <div>
-                <ul className="flex gap-12 items-center justify-center text-sm">
+                <button className="sm:hidden cursor-pointer hover:shadow hover:bg-blue-100 hover:text-blue-900 p-2 rounded-md">
+                    <FaBars />
+                </button>
+            </div>
+            <div className="hidden sm:block">
+                <ul className="items-center justify-center text-sm flex gap-8 md:gap-12">
                     <li>
                         <NavLink to="/" className={getNavLinkClass}>Home </NavLink>
                     </li>
@@ -49,7 +54,9 @@ const Header = () => {
                     </li>
 
                     <li className="text-gray-500 hover:text-blue-600">
-                        <a href="https://github.com/AbdulMoiz34" target="_blank"><FaGithub size={25} /></a>
+                        <Tooltip placement="bottom" title="Github Profile">
+                            <a href="https://github.com/AbdulMoiz34" target="_blank"><FaGithub size={25} /></a>
+                        </Tooltip>
                     </li>
                 </ul>
             </div>

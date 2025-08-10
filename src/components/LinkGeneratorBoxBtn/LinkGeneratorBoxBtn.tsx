@@ -5,7 +5,7 @@ interface LinkGeneratorBoxProps {
 }
 
 const LinkGeneratorButton = ({ onClick, text, disabled }: LinkGeneratorBoxProps) => {
-    return <button disabled={disabled} onClick={onClick} className="disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer">{text}</button>
+    return <button disabled={disabled} onClick={onClick} className="disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:text-blue-600 hover:underline">{text}</button>
 }
 
 

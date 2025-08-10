@@ -95,7 +95,7 @@ const FilesSection = () => {
 
     return (
         <div className="w-full h-full py-6 px-10 flex flex-col">
-            <div className="flex justify-between items-center">
+            <div className="flex justify-between items-center flex-col sm:flex-row gap-y-2">
                 <Heading text="Files" />
                 {files.length > 0 && <FilesBtns downloadAllFiles={downloadAllFiles} deleteFiles={deleteAllFiles} />}
             </div>

@@ -1,6 +1,7 @@
 import { getDatabase, ref, set, onValue, remove, update } from "firebase/database";
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
+import { getAnalytics } from "firebase/analytics";
 
 const firebaseConfig = {
     apiKey: "AIzaSyDXwE3uKzkSoRDuK0cDOHuy-uHNsgXqkQU",
@@ -16,6 +17,7 @@ const app = initializeApp(firebaseConfig);
 const db = getDatabase(app);
 const auth = getAuth(app);
 const googleProvider = new GoogleAuthProvider();
+const analytics = getAnalytics(app);
 
 export {
     db,
@@ -29,5 +31,6 @@ export {
     onAuthStateChanged,
     googleProvider,
     signInWithPopup,
-    signInWithEmailAndPassword
+    signInWithEmailAndPassword,
+    analytics
 };

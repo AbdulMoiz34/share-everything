@@ -6,7 +6,7 @@ const LinkGeneratorBox = () => {
     const location = useLocation();
     const navigate = useNavigate();
     const [id, setId] = useState<string>(location.pathname.slice(6));
-    const url: string = `https://share-everything.netlify.app/view/${id}`;
+    const url: string = `https://share.../${id ? `view/${id}` : ""}`;
 
     useEffect(() => {
         const getPreviousId = localStorage.getItem("id");
@@ -17,10 +17,12 @@ const LinkGeneratorBox = () => {
     }, []);
 
     return (
-        <div className="bg-blue-300 px-4 text-sm py-4 flex">
-            <input type="text" placeholder=" id" value={url} className="text-lg border-none outline-none w-full" readOnly />
-            <LinkGeneratorBoxBtns id={id} setId={setId} />
-            <ShareBtnsModal url={url} />
+        <div className="bg-blue-300 px-4 text-sm py-4 flex gap-4 flex-col items-center sm:items-start sm:flex-row">
+            <input type="text" placeholder=" id" value={url} className="flex-1 text-center sm:text-start text-blue-900 lg:text-lg border-none outline-none w-full" readOnly />
+            <div className="flex">
+                <LinkGeneratorBoxBtns id={id} setId={setId} />
+                <ShareBtnsModal url={url} />
+            </div>
         </div>
     )
 }
