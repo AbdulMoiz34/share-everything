@@ -34,11 +34,10 @@ const FilesList = ({ onDrop, files, tempFiles }: FilesListProps) => {
     const pageChangeHandler = (page: number) => {
         setCurrentPage(page - 1);
     }
-
     return (
         <div className="relative h-full">
             <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                {newArr[currentPage].map((file, idx) => (
+                {files.length > 0 && newArr[currentPage].map((file, idx) => (
                     <FileCard key={idx} file={file} />
                 ))}
                 {tempFiles.map((tempFile, idx) => {
