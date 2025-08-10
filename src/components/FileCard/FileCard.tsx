@@ -32,7 +32,7 @@ const FileCard = ({ file }: FileCardProps) => {
     return (
         <a href={"url" in file ? file.url : ""} download target="_blank" className="hover:bg-blue-100 w-32 h-32 flex flex-col justify-center items-center gap-2 shadow">
             {file?.type?.startsWith("image") ?
-                <img className="object-cover w-full h-full" src={"url" in file ? file.url : URL.createObjectURL(file as File)} /> :
+                <img loading="lazy" className="object-cover w-full h-full" src={"url" in file ? file.url : URL.createObjectURL(file as File)} /> :
                 <>
                     {icon}
                     <p className="text-center text-gray-600 opacity-70 text-sm">{fileName.length > 10 ? fileName.slice(0, 10) + "..." : fileName}<b>{fileName.slice(fileName.lastIndexOf("."))}</b></p>

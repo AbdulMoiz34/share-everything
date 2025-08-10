@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Heading, TextArea } from "../../components";
-import { db, ref, onValue, remove, update } from "../../firebase";
+import { db, ref, onValue, update } from "../../firebase";
 import { detetectURLS } from "../../helpers";
 import { Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
@@ -14,7 +14,6 @@ const TextSection = () => {
     const [isSaved, setIsSaved] = useState<boolean>(false);
     const [urls, setUrls] = useState<string[]>([]);
     const { id } = useParams();
-    console.log(id);
 
     useEffect(() => {
         setLoading(true);
@@ -53,11 +52,15 @@ const TextSection = () => {
     }
 
     const clearHandler = async () => {
+        if (!id) {
+            toast.error("Generate URL Please.");
+            return;
+        }
         setText("");
         setUrls([]);
         setIsSaved(false);
         try {
-            await remove(ref(db, `shares/${id}`));
+            await update(ref(db, `shares/${id}`), { text: "" });
         } catch (err) {
             toast.error("something went wrong.");
         }

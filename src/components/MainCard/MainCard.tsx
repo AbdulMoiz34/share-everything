@@ -1,4 +1,4 @@
-import ShareLinkGenerator from "../ShareLinkGenerator";
+import ShareLinkGenerator from "../LinkGeneratorBox";
 
 const MainCard = ({ children }: { children: React.ReactNode }) => {
     return (

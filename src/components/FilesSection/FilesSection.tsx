@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from "react";
 import { DropZone, FilesList, Heading } from "../../components";
 import { downloadFiles, uploadToCloudinary } from "../../helpers";
-import { onValue, ref, db, update, remove, } from "../../firebase";
+import { onValue, ref, db, update } from "../../firebase";
 import FilesBtns from "../FilesBtns";
 import toast from "react-hot-toast";
 import { Link, useParams } from "react-router-dom";
@@ -48,7 +48,6 @@ const FilesSection = () => {
             const promises = acceptedFiles.map((file) => uploadToCloudinary(file));
             const newFiles = await Promise.all(promises);
             setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-            setTempFiles([]);
             await update(ref(db, `shares/${id}`), {
                 files: [...files, ...newFiles]
             });
@@ -57,12 +56,14 @@ const FilesSection = () => {
             timeoutId = setTimeout(deleteAllFiles, 1_8_00_000); // file will be removed after 30mins
         } catch (err: unknown) {
             toast.error("something went wrong.");
+        } finally {
+            setTempFiles([]);
         }
     }
 
     const deleteAllFiles = async () => {
         try {
-            await remove(ref(db, `shares/${id}`));
+            await update(ref(db, `shares/${id}`), { files: [] });
             setFiles([]);
         } catch (err) {
             toast.error("Try again.");
@@ -80,6 +81,7 @@ const FilesSection = () => {
             toast.dismiss(load);
             toast.success("Files downloaded successfully.");
         } catch (_err) {
+            toast.dismiss();
             toast.error("Something went wrong. Try");
         }
     }
@@ -90,6 +92,7 @@ const FilesSection = () => {
             </div>
         </div>
     }
+
     return (
         <div className="w-full h-full py-6 px-10 flex flex-col">
             <div className="flex justify-between items-center">

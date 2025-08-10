@@ -9,7 +9,12 @@ import FilesList from "./FilesList";
 import FileCard from "./FileCard";
 import TextArea from "./TextArea";
 import NetworkStatus from "./NetworkStatus";
-import ShareLinkGenerator from "./ShareLinkGenerator";
+import LinkGeneratorBox from "./LinkGeneratorBox";
+import Pagination from "./Pagination";
+import ShareBtnsModal from "./ShareBtnsModal";
+import ShareButton from "./ShareButton";
+import LinkGeneratorBoxBtns from "./LinkGeneratorBoxBtns";
+import LinkGeneratorButton from "./LinkGeneratorBoxBtn";
 
 export {
     Header,
@@ -23,5 +28,10 @@ export {
     FileCard,
     TextArea,
     NetworkStatus,
-    ShareLinkGenerator
+    LinkGeneratorBox,
+    Pagination,
+    ShareBtnsModal,
+    ShareButton,
+    LinkGeneratorBoxBtns,
+    LinkGeneratorButton
 };
