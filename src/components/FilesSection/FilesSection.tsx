@@ -104,7 +104,7 @@ const FilesSection = () => {
                     <FilesList onDrop={onDrop} tempFiles={tempFiles} files={files} /> :
                     <DropZone onDrop={onDrop} element={
                         <div className="cursor-pointer hover:border-blue-400 hover:border-1 flex justify-center items-center h-full text-blue-800">
-                            {user ? <div className="text-xs flex flex-col justify-center items-center gap-2"><LuFileStack className="text-4xl" /> Drag and drop any files.</div> : <div className="w-3/6 text-center text-sm">
+                            {user ? <div className="text-xs flex flex-col justify-center items-center gap-2"><LuFileStack className="text-4xl" /> Drag and drop any files.</div> : <div className="w-full text-center text-xs sm:text-sm">
                                 Drag and drop any files up to <b className="text-blue-800">10</b>. <br />If you want to add more, <Link to={"/login"} className="text-blue-500 font-bold">Login</Link> Please
                             </div>}
                         </div>

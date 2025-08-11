@@ -67,7 +67,7 @@ const FilesList = ({ onDrop, files, tempFiles }: FilesListProps) => {
                     }
                 />
             </div>
-            <div className="mt-8 flex justify-self-end">
+            <div className="mt-8 flex justify-center sm:justify-self-end">
                 <Pagination pageChangeHandler={pageChangeHandler} pageSize={pageSize} total={files.length} />
             </div>
         </div>
