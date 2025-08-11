@@ -1,11 +1,11 @@
-import {  useState } from "react";
+import { useState } from "react";
 import { FilesSection, SideBar, TextSection } from "../../components";
 
 const Home = () => {
     const [type, setType] = useState<"text" | "files">("text");
 
     return (
-        <div className="w-full mx-auto flex">
+        <div className="w-full mx-auto flex flex-col sm:flex-row">
             <SideBar type={type} setType={setType} />
             <div className="w-full min-h-full">
                 {type == "text" ? <TextSection /> : <FilesSection />}
