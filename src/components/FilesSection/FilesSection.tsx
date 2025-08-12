@@ -9,6 +9,7 @@ import { AuthContext } from "../../context";
 import { LuFileStack } from "react-icons/lu";
 import { Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
+import { usePreventUnload } from "../../hooks";
 
 interface FileType {
     url: string;
@@ -24,6 +25,7 @@ const FilesSection = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [btnsLoading, setBtnsLoading] = useState<boolean>(false);
     const { id } = useParams();
+    const [isUploading, setIsUploading] = useState<boolean>(false);
 
     useEffect(() => {
         onValue(ref(db, `shares/${id}`), (snapshot) => {
@@ -33,6 +35,9 @@ const FilesSection = () => {
             setLoading(false);
         });
     }, []);
+
+
+    usePreventUnload(isUploading)
 
     let timeoutId: ReturnType<typeof setTimeout>;
     const onDrop = async (acceptedFiles: File[]) => {
@@ -44,9 +49,15 @@ const FilesSection = () => {
             toast.error("Login required.");
             return;
         }
+
+        if (acceptedFiles.length > 10) {
+            toast.error("you can select 10 files at once.");
+            return;
+        }
         setTempFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
 
         try {
+            setIsUploading(true);
             const promises = acceptedFiles.map((file) => uploadToCloudinary(file));
             const newFiles = await Promise.all(promises);
             setFiles((prevFiles) => [...prevFiles, ...newFiles]);
@@ -60,6 +71,7 @@ const FilesSection = () => {
             toast.error("something went wrong.");
         } finally {
             setTempFiles([]);
+            setIsUploading(false);
         }
     }
 
