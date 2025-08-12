@@ -21,7 +21,7 @@ const LinkGeneratorBox = () => {
             <input type="text" placeholder=" id" value={url} className="flex-1 text-center sm:text-start text-blue-900 lg:text-lg border-none outline-none w-full" readOnly />
             <div className="flex text-xs sm:text-sm text-blue-900">
                 <LinkGeneratorBoxBtns id={id} setId={setId} />
-                <ShareBtnsModal url={url} />
+                <ShareBtnsModal url={`https://share-everything.netlify.app/view/${id}`} />
             </div>
         </div>
     )

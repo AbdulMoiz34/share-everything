@@ -1,5 +1,5 @@
 import { CiFileOn } from "react-icons/ci";
-import { FaHtml5 } from "react-icons/fa";
+import { FaHtml5, FaRegCheckCircle } from "react-icons/fa";
 import { IoLogoCss3 } from "react-icons/io5";
 import { IoLogoJavascript } from "react-icons/io";
 import { MdOutlinePreview } from "react-icons/md";
@@ -58,6 +58,11 @@ const FileCard = ({ file }: FileCardProps) => {
                 >
                     <MdOutlinePreview size={17} className="text-gray-800" />
                 </a>
+
+                <button
+                    className="p-2 bg-white rounded-full shadow hover:scale-110 transition cursor-pointer hover:bg-blue-100">
+                    <FaRegCheckCircle size={15} className="text-gray-800" />
+                </button>
             </div>
         </div>
 

@@ -99,6 +99,7 @@ const FilesSection = () => {
             return;
         }
         try {
+            setIsUploading(true);
             setBtnsLoading(true);
             const load = toast.loading("Loading...");
             await downloadFiles(files);
@@ -109,6 +110,7 @@ const FilesSection = () => {
             toast.error("Something went wrong. Try");
         } finally {
             setBtnsLoading(false);
+            setIsUploading(false);
         }
     }
 
