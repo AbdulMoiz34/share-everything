@@ -17,6 +17,7 @@ import LinkGeneratorBoxBtns from "./LinkGeneratorBoxBtns";
 import LinkGeneratorButton from "./LinkGeneratorBoxBtn";
 import DeleteBtn from "./DeleteButton";
 import Footer from "./Footer";
+import ConfirmModal from "./ConfirmModal";
 
 export {
     Header,
@@ -37,5 +38,6 @@ export {
     LinkGeneratorBoxBtns,
     LinkGeneratorButton,
     DeleteBtn,
-    Footer
+    Footer,
+    ConfirmModal
 };

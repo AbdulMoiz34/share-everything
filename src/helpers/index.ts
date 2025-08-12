@@ -13,6 +13,7 @@ interface UploadedFile {
     url: string;
     type: string;
     name: string;
+    public_id: string;
 }
 
 const uploadToCloudinary = async (file: File): Promise<UploadedFile> => {
@@ -26,7 +27,11 @@ const uploadToCloudinary = async (file: File): Promise<UploadedFile> => {
             'https://api.cloudinary.com/v1_1/moiz34/auto/upload',
             formData
         );
-        return { url: response.data.secure_url, type: file.type, name: file.name };
+
+        const url = response.data.secure_url;
+        const public_id = response.data.public_id;
+
+        return { url, public_id, type: file.type, name: file.name };
     } catch (error: unknown) {
         throw new Error("Upload Failed.");
     }
@@ -56,9 +61,27 @@ const googleLogin = async () => {
     await signInWithPopup(auth, googleProvider);
 };
 
+const deleteFileFromCloudinary = async (public_id: string) => {
+
+    try {
+        const response = await axios.delete("https://share-everthing-backend-production-d5e7.up.railway.app/api/delete-resource", {
+            data: {
+                public_id,
+                resource_type: "image"
+            },
+            headers: { "Content-Type": "application/json" }
+        });
+
+        return response.data;
+    } catch (err) {
+        throw err;
+    }
+}
+
 export {
     detetectURLS,
     uploadToCloudinary,
     downloadFiles,
-    googleLogin
+    googleLogin,
+    deleteFileFromCloudinary
 }

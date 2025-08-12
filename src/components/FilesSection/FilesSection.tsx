@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { DropZone, FilesList, Heading } from "../../components";
-import { downloadFiles, uploadToCloudinary } from "../../helpers";
+import { deleteFileFromCloudinary, downloadFiles, uploadToCloudinary } from "../../helpers";
 import { onValue, ref, db, update } from "../../firebase";
 import FilesBtns from "../FilesBtns";
 import toast from "react-hot-toast";
@@ -14,13 +14,15 @@ interface FileType {
     url: string;
     type: string;
     name: string;
+    public_id: string;
 }
 
 const FilesSection = () => {
     const [tempFiles, setTempFiles] = useState<File[]>([]);
     const [files, setFiles] = useState<FileType[]>([]);
     const { user } = useContext(AuthContext);
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] = useState<boolean>(true);
+    const [btnsLoading, setBtnsLoading] = useState<boolean>(false);
     const { id } = useParams();
 
     useEffect(() => {
@@ -63,10 +65,19 @@ const FilesSection = () => {
 
     const deleteAllFiles = async () => {
         try {
+            toast.loading("Loading...");
+            setBtnsLoading(true);
+            const promises = files.map(file => deleteFileFromCloudinary(file.public_id));
+            await Promise.all(promises);
             await update(ref(db, `shares/${id}`), { files: [] });
+            toast.dismiss();
+            toast.success(`${files.length > 1 ? "Files" : "File"} deleted.`);
             setFiles([]);
         } catch (err) {
+            toast.dismiss();
             toast.error("Try again.");
+        } finally {
+            setBtnsLoading(false);
         }
     }
 
@@ -76,6 +87,7 @@ const FilesSection = () => {
             return;
         }
         try {
+            setBtnsLoading(true);
             const load = toast.loading("Loading...");
             await downloadFiles(files);
             toast.dismiss(load);
@@ -83,8 +95,12 @@ const FilesSection = () => {
         } catch (_err) {
             toast.dismiss();
             toast.error("Something went wrong. Try");
+        } finally {
+            setBtnsLoading(false);
         }
     }
+
+
     if (loading) {
         return <div className="relative w-full h-full">
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -97,7 +113,7 @@ const FilesSection = () => {
         <div className="w-full h-full py-6 px-4 sm:px-10 flex flex-col">
             <div className="flex justify-between items-center flex-col sm:flex-row gap-y-2">
                 <Heading text="Files" />
-                {files.length > 0 && <FilesBtns downloadAllFiles={downloadAllFiles} deleteFiles={deleteAllFiles} />}
+                {files.length > 0 && <FilesBtns loading={btnsLoading} downloadAllFiles={downloadAllFiles} deleteFiles={deleteAllFiles} />}
             </div>
             <div className="mt-3 sm:mt-6 h-9/12">
                 {tempFiles.length || files.length ?
