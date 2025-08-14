@@ -62,20 +62,15 @@ const googleLogin = async () => {
 };
 
 const deleteFileFromCloudinary = async (public_id: string) => {
+    const response = await axios.delete("https://share-everthing-backend-production-d5e7.up.railway.app/api/delete-resource", {
+        data: {
+            public_id,
+            resource_type: "image"
+        },
+        headers: { "Content-Type": "application/json" }
+    });
 
-    try {
-        const response = await axios.delete("https://share-everthing-backend-production-d5e7.up.railway.app/api/delete-resource", {
-            data: {
-                public_id,
-                resource_type: "image"
-            },
-            headers: { "Content-Type": "application/json" }
-        });
-
-        return response.data;
-    } catch (err) {
-        throw err;
-    }
+    return response.data;
 }
 
 export {
