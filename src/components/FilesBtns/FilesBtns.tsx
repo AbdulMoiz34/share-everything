@@ -5,7 +5,7 @@ import ConfirmModal from "../ConfirmModal";
 interface FilesBtnsProps {
     deleteFiles: () => Promise<void>;
     downloadAllFiles: () => Promise<void>;
-    loading: boolean
+    loading: boolean;
 }
 
 const FilesBtns = ({ deleteFiles, downloadAllFiles, loading }: FilesBtnsProps) => {
@@ -27,4 +27,4 @@ const FilesBtns = ({ deleteFiles, downloadAllFiles, loading }: FilesBtnsProps) =
     )
 }
 
-export default FilesBtns
+export default FilesBtns;

@@ -35,21 +35,18 @@ const TextSection = () => {
         setText(e.target.value);
     }
 
-    let timeoutId: ReturnType<typeof setTimeout>;
     const saveHandler = async () => {
-        logEvent(analytics, "text_saved", {
-            saved_at: new Date().toISOString()
-        });
         if (!id) {
             toast.error("Generate URL Please.");
             return;
         }
-        clearTimeout(timeoutId);
-        setIsSaved(true);
-        setUrls(detetectURLS(text));
-        timeoutId = setTimeout(clearHandler, 1_8_00_000);
+        logEvent(analytics, "text_saved", {
+            saved_at: new Date().toISOString()
+        });
         try {
             await update(ref(db, `shares/${id}`), { text });
+            setIsSaved(true);
+            setUrls(detetectURLS(text));
         } catch (err) {
             toast.error("something went wrong.");
         }
@@ -60,11 +57,11 @@ const TextSection = () => {
             toast.error("Generate URL Please.");
             return;
         }
-        setText("");
-        setUrls([]);
-        setIsSaved(false);
         try {
             await update(ref(db, `shares/${id}`), { text: "" });
+            setText("");
+            setUrls([]);
+            setIsSaved(false);
         } catch (err) {
             toast.error("something went wrong.");
         }
@@ -89,7 +86,6 @@ const TextSection = () => {
                         <button disabled={!text} onClick={isSaved ? copyToClipboard : saveHandler} className={`disabled:opacity-20 disabled:cursor-default border-2 px-16 py-2 text-xl italic font-[900] cursor-pointer transition duration-100 ${text && "hover:text-blue-600"}`}>{isSaved ? "Copy" : "Save"}</button>
                     </div>
                     <div className="links w-10/12">
-
                         {urls.map((url, idx) => (
                             <div key={idx} className="truncate">
                                 <a className="text-lg text-blue-500 hover:underline" href={url} target="_blank">{url}</a>

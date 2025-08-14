@@ -8,7 +8,9 @@ interface DeleteBtnProps {
 
 const DeleteBtn = ({ id, deleteHandler }: DeleteBtnProps) => {
     const showModal = () => {
-        ConfirmModal("Are you sure?", "All your data will be erased. If you press 'yes'.", deleteHandler);
+        ConfirmModal("Are you sure?",
+            "All your data will be erased. If you press 'yes'.",
+            deleteHandler);
     }
 
     return (

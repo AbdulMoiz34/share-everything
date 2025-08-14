@@ -2,13 +2,8 @@ import { useContext, useState } from "react";
 import { DropZone, FileCard, Pagination } from "../../components";
 import { AiOutlinePlus } from "react-icons/ai";
 import { AuthContext } from "../../context";
+import type { FileType } from "../FilesSection/FilesSection";
 
-interface FileType {
-    url: string;
-    type: string;
-    name: string;
-    createdAt: number;
-}
 
 interface FilesListProps {
     onDrop: (acceptedFiles: File[]) => void;

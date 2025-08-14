@@ -36,6 +36,7 @@ export default function App() {
     setUser,
     loading,
   }
+  
   return (
     <>
       <Toaster position="top-center" />

@@ -13,12 +13,6 @@ const TextArea = ({ text, onChangeHandler }: TextAreaProps) => {
             textArea.current.style.height = textArea.current.scrollHeight + 'px';
         }
     }, [text]);
-    // const resizeTextArea = () => {
-    //     if (textArea.current) {
-    //         textArea.current.style.height = "100%";
-    //         textArea.current.style.height = textArea.current.scrollHeight + 'px';
-    //     }
-    // }
 
     return (
         <textarea

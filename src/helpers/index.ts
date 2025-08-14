@@ -3,6 +3,7 @@ import axios from "axios";
 import JSZip from 'jszip';
 import { saveAs } from "file-saver";
 import { auth, googleProvider, signInWithPopup } from "../firebase/";
+import type { FileType } from "../components/FilesSection/FilesSection";
 
 const detetectURLS = (text: string): string[] => {
     const links = find(text);
@@ -14,6 +15,7 @@ interface UploadedFile {
     type: string;
     name: string;
     public_id: string;
+    createdAt: number;
 }
 
 const uploadToCloudinary = async (file: File): Promise<UploadedFile> => {
@@ -31,17 +33,12 @@ const uploadToCloudinary = async (file: File): Promise<UploadedFile> => {
         const url = response.data.secure_url;
         const public_id = response.data.public_id;
 
-        return { url, public_id, type: file.type, name: file.name };
+        return { url, public_id, type: file.type, name: file.name, createdAt: Date.now() };
     } catch (error: unknown) {
         throw new Error("Upload Failed.");
     }
 };
 
-interface FileType {
-    url: string;
-    type: string;
-    name: string;
-}
 
 const downloadFiles = async (files: FileType[]) => {
     const zip = new JSZip();

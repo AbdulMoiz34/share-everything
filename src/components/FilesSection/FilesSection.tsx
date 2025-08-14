@@ -10,9 +10,8 @@ import { LuFileStack } from "react-icons/lu";
 import { Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
 import { usePreventUnload } from "../../hooks";
-import { AiOutlineInfoCircle } from "react-icons/ai";
 
-interface FileType {
+export interface FileType {
     url: string;
     type: string;
     name: string;
@@ -39,8 +38,7 @@ const FilesSection = () => {
     }, []);
 
 
-    usePreventUnload(isUploading)
-
+    usePreventUnload(isUploading);
     const onDrop = async (acceptedFiles: File[]) => {
         if (!id) {
             toast.error("Generate URL Please.");
@@ -113,7 +111,6 @@ const FilesSection = () => {
         }
     }
 
-
     if (loading) {
         return <div className="relative w-full h-full">
             <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
@@ -128,15 +125,9 @@ const FilesSection = () => {
                 <Heading text="Files" />
                 {files.length > 0 && <FilesBtns loading={btnsLoading} downloadAllFiles={downloadAllFiles} deleteFiles={deleteAllFiles} />}
             </div>
-            <div className="mt-3 sm:mt-2 h-9/12">
+            <div className="mt-3 sm:mt-6 h-9/12">
                 {tempFiles.length || files.length ?
-                    <>
-                        <div className="mb-3 text-sm text-red-600 flex justify-center items-center gap-1">
-                            <AiOutlineInfoCircle className="w-4 h-4 text-red-700" />
-                            Files will automatically be deleted after <strong>2 days</strong>.
-                        </div>
-                        <FilesList onDrop={onDrop} tempFiles={tempFiles} files={files} />
-                    </> :
+                    <FilesList onDrop={onDrop} tempFiles={tempFiles} files={files} /> :
                     <DropZone onDrop={onDrop} element={
                         <div className="cursor-pointer hover:border-blue-400 hover:border-1 flex justify-center items-center h-full text-blue-800">
                             {user ? <div className="text-xs flex flex-col justify-center items-center gap-2"><LuFileStack className="text-4xl" /> Drag and drop any files.</div> : <div className="w-full text-center text-xs sm:text-sm">

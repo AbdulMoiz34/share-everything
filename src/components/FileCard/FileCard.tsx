@@ -3,15 +3,10 @@ import { FaHtml5, FaRegCheckCircle } from "react-icons/fa";
 import { IoLogoCss3 } from "react-icons/io5";
 import { IoLogoJavascript } from "react-icons/io";
 import { MdOutlinePreview } from "react-icons/md";
-
+import type { FileType } from "../FilesSection/FilesSection";
 
 interface FileCardProps {
-    file: {
-        url: string;
-        type: string;
-        name: string;
-        createdAt: number
-    } | File;
+    file: FileType | File;
 }
 
 const FileCard = ({ file }: FileCardProps) => {
@@ -31,17 +26,17 @@ const FileCard = ({ file }: FileCardProps) => {
             icon = <CiFileOn size={40} />
     }
 
-
     const formatedDate = (ms: number) => {
-        const date = new Date(Date.now());
-        const formatted = date.toLocaleDateString("en-GB", {
-            day: 'numeric',
-            month: 'short',
-            year: 'numeric'
+        const date = new Date(ms);
+        return date.toLocaleString("en-GB", {
+            day: "numeric",
+            month: "short",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: true,
         });
-        return formatted;
     }
-    // formatedDate();
+
     return (
         <div className="relative group w-32 h-32 shadow overflow-hidden rounded-md">
             {file?.type?.startsWith("image") ? (
@@ -63,7 +58,7 @@ const FileCard = ({ file }: FileCardProps) => {
             )}
 
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                <p className="absolute top-2 text-white text-xs">{"createdAt" in file ? file.createdAt : ""}</p>
+                <p className="absolute top-2 text-white text-xs">{"createdAt" in file ? formatedDate(file.createdAt) : ""}</p>
                 <a
                     href={"url" in file ? file.url : ""}
                     target="_blank"
@@ -71,7 +66,6 @@ const FileCard = ({ file }: FileCardProps) => {
                 >
                     <MdOutlinePreview size={17} className="text-gray-800" />
                 </a>
-
                 <button
                     className="p-2 bg-white rounded-full shadow hover:scale-110 transition cursor-pointer hover:bg-blue-100">
                     <FaRegCheckCircle size={15} className="text-gray-800" />

@@ -2,18 +2,12 @@ import { useState } from 'react';
 import { Divider, Modal } from 'antd';
 import { ShareButton } from "..";
 
-interface ShareBtnsModalProps {
-    url: string;
-}
-
-const ShareBtnsModal = ({ url }: ShareBtnsModalProps) => {
-
+const ShareBtnsModal = ({ url }: { url: string }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const showModal = () => {
         setIsModalOpen(true);
     };
-
 
     const hideModal = () => {
         setIsModalOpen(false);
