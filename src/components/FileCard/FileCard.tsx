@@ -4,6 +4,7 @@ import { IoLogoCss3 } from "react-icons/io5";
 import { IoLogoJavascript } from "react-icons/io";
 import { MdOutlinePreview } from "react-icons/md";
 import type { FileType } from "../FilesSection/FilesSection";
+import { formatedDate, formatFileSize } from "../../helpers";
 
 interface FileCardProps {
     file: FileType | File;
@@ -12,6 +13,7 @@ interface FileCardProps {
 const FileCard = ({ file }: FileCardProps) => {
     let icon;
     const fileName: string = file.name;
+
     switch (file.type) {
         case "text/html":
             icon = <FaHtml5 size={40} />
@@ -24,17 +26,6 @@ const FileCard = ({ file }: FileCardProps) => {
             break;
         default:
             icon = <CiFileOn size={40} />
-    }
-
-    const formatedDate = (ms: number) => {
-        const date = new Date(ms);
-        return date.toLocaleString("en-GB", {
-            day: "numeric",
-            month: "short",
-            hour: "2-digit",
-            minute: "2-digit",
-            hour12: true,
-        });
     }
 
     return (
@@ -59,6 +50,8 @@ const FileCard = ({ file }: FileCardProps) => {
 
             <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
                 <p className="absolute top-2 text-white text-xs">{"createdAt" in file ? formatedDate(file.createdAt) : ""}</p>
+                <p className="absolute bottom-2 text-white text-xs">{"fileSize" in file ? formatFileSize(file.fileSize) : ""}</p>
+
                 <a
                     href={"url" in file ? file.url : ""}
                     target="_blank"

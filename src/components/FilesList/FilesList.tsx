@@ -30,6 +30,7 @@ const FilesList = ({ onDrop, files, tempFiles }: FilesListProps) => {
     const pageChangeHandler = (page: number) => {
         setCurrentPage(page - 1);
     }
+    
     return (
         <div className="relative h-full">
             <div className="flex flex-wrap gap-2 justify-center sm:justify-start">

@@ -10,15 +10,32 @@ const detetectURLS = (text: string): string[] => {
     return links.map(link => link.href);
 }
 
-interface UploadedFile {
-    url: string;
-    type: string;
-    name: string;
-    public_id: string;
-    createdAt: number;
+
+const formatFileSize = (bytes: number) => {
+
+    if (bytes < 1024) {
+        return bytes + ' Bytes';
+    } else if (bytes < 1024 * 1024) {
+        return (bytes / 1024).toFixed(2) + ' KB';
+    } else if (bytes < 1024 * 1024 * 1024) {
+        return (bytes / (1024 * 1024)).toFixed(2) + ' MB';
+    } else {
+        return (bytes / (1024 * 1024 * 1024)).toFixed(2) + ' GB';
+    }
 }
 
-const uploadToCloudinary = async (file: File): Promise<UploadedFile> => {
+const formatedDate = (ms: number) => {
+    const date = new Date(ms);
+    return date.toLocaleString("en-GB", {
+        day: "numeric",
+        month: "short",
+        hour: "2-digit",
+        minute: "2-digit",
+        hour12: true,
+    });
+}
+
+const uploadToCloudinary = async (file: File): Promise<FileType> => {
     const formData = new FormData();
     formData.append('file', file);
     formData.append('upload_preset', 'fastshare098121321421');
@@ -29,11 +46,10 @@ const uploadToCloudinary = async (file: File): Promise<UploadedFile> => {
             'https://api.cloudinary.com/v1_1/moiz34/auto/upload',
             formData
         );
-
         const url = response.data.secure_url;
         const public_id = response.data.public_id;
 
-        return { url, public_id, type: file.type, name: file.name, createdAt: Date.now() };
+        return { url, public_id, type: file.type, name: file.name, createdAt: Date.now(), fileSize: response.data.bytes };
     } catch (error: unknown) {
         throw new Error("Upload Failed.");
     }
@@ -75,5 +91,7 @@ export {
     uploadToCloudinary,
     downloadFiles,
     googleLogin,
-    deleteFileFromCloudinary
+    deleteFileFromCloudinary,
+    formatFileSize,
+    formatedDate
 }

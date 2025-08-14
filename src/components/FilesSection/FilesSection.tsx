@@ -16,7 +16,8 @@ export interface FileType {
     type: string;
     name: string;
     public_id: string;
-    createdAt: number
+    createdAt: number;
+    fileSize: number;
 }
 
 const FilesSection = () => {
