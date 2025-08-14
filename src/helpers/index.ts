@@ -14,6 +14,7 @@ interface UploadedFile {
     type: string;
     name: string;
     public_id: string;
+    createdAt: number
 }
 
 const uploadToCloudinary = async (file: File): Promise<UploadedFile> => {
@@ -31,7 +32,7 @@ const uploadToCloudinary = async (file: File): Promise<UploadedFile> => {
         const url = response.data.secure_url;
         const public_id = response.data.public_id;
 
-        return { url, public_id, type: file.type, name: file.name };
+        return { url, public_id, type: file.type, name: file.name, createdAt: Date.now() };
     } catch (error: unknown) {
         throw new Error("Upload Failed.");
     }

@@ -7,6 +7,7 @@ interface FileType {
     url: string;
     type: string;
     name: string;
+    createdAt: number;
 }
 
 interface FilesListProps {
@@ -37,7 +38,7 @@ const FilesList = ({ onDrop, files, tempFiles }: FilesListProps) => {
     return (
         <div className="relative h-full">
             <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                {files.length > 0 && newArr[currentPage].map((file, idx) => (
+                {(files.length > 0 && currentPage < newArr.length) && newArr[currentPage].map((file, idx) => (
                     <FileCard key={idx} file={file} />
                 ))}
                 {tempFiles.map((tempFile, idx) => {
