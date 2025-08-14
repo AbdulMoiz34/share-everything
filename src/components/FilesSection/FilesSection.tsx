@@ -10,6 +10,7 @@ import { LuFileStack } from "react-icons/lu";
 import { Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
 import { usePreventUnload } from "../../hooks";
+import { CiCircleInfo } from "react-icons/ci";
 
 export interface FileType {
     url: string;
@@ -125,6 +126,10 @@ const FilesSection = () => {
             <div className="flex justify-between items-center flex-col sm:flex-row gap-y-2">
                 <Heading text="Files" />
                 {files.length > 0 && <FilesBtns loading={btnsLoading} downloadAllFiles={downloadAllFiles} deleteFiles={deleteAllFiles} />}
+            </div>
+            <div className="flex gap-1 mt-2 justify-center sm:items-center">
+                <CiCircleInfo className="text-red-600 sm:text-lg"/>
+                <p className="text-red-500 text-xs sm:text-sm text-center">Files will automatically be deleted after <span className="font-bold">2 days</span>.</p>
             </div>
             <div className="mt-3 sm:mt-6 h-9/12">
                 {tempFiles.length || files.length ?
