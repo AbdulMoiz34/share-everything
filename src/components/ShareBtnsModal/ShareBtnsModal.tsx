@@ -2,8 +2,9 @@ import { useState } from 'react';
 import { Divider, Modal } from 'antd';
 import { ShareButton } from "..";
 
-const ShareBtnsModal = ({ url }: { url: string }) => {
+const ShareBtnsModal = ({ id }: { id: string }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const url = `https://share-everything.netlify.app/view/${id}`;
 
     const showModal = () => {
         setIsModalOpen(true);
@@ -15,7 +16,7 @@ const ShareBtnsModal = ({ url }: { url: string }) => {
 
     return (
         <>
-            <button onClick={showModal} className="cursor-pointer hover:text-blue-600 ml-4">Share</button>
+            <button disabled={!id.length} onClick={showModal} className="disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer hover:text-blue-600 ml-4">Share</button>
             <Modal
                 centered
                 title="Share"

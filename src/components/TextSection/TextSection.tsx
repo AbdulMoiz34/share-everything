@@ -37,7 +37,7 @@ const TextSection = () => {
 
     const saveHandler = async () => {
         if (!id) {
-            toast.error("Generate URL Please.");
+            toast.error("Generate the URL and Save it.");
             return;
         }
         logEvent(analytics, "text_saved", {
@@ -54,7 +54,7 @@ const TextSection = () => {
 
     const clearHandler = async () => {
         if (!id) {
-            toast.error("Generate URL Please.");
+            toast.error("Generate the URL and Save it.");
             return;
         }
         try {

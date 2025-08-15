@@ -44,7 +44,7 @@ const FilesSection = () => {
     usePreventUnload(isUploading);
     const onDrop = async (acceptedFiles: File[]) => {
         if (!id) {
-            toast.error("Generate URL Please.");
+            toast.error("Generate the URL and Save it.");
             return;
         }
         if (!user && (files.length > 10 || (files.length + acceptedFiles.length > 10))) {
