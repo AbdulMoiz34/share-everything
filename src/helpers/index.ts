@@ -48,8 +48,9 @@ const uploadToCloudinary = async (file: File): Promise<FileType> => {
         );
         const url = response.data.secure_url;
         const public_id = response.data.public_id;
+        const resource_type = response.data.resource_type;
 
-        return { url, public_id, type: file.type, name: file.name, createdAt: Date.now(), fileSize: response.data.bytes };
+        return { url, public_id, type: file.type, name: file.name, createdAt: Date.now(), fileSize: response.data.bytes, resource_type };
     } catch (error: unknown) {
         throw new Error("Upload Failed.");
     }
@@ -70,15 +71,33 @@ const downloadFiles = async (files: FileType[]) => {
     saveAs(zipBlob, "AllFiles");
 };
 
+const validateFile = (file: File) => {
+    const blockedFiles: string[] = [
+        "action", "apk", "app", "bat", "bin", "cmd", "com", "command",
+        "cpl", "csh", "exe", "gadget", "inf1", "ins", "inx", "ipa", "isu",
+        "job", "jse", "ksh", "lnk", "msc", "msi", "msp", "mst", "osx", "out",
+        "paf", "pif", "prg", "ps1", "reg", "rgs", "run", "sct", "shb", "shs",
+        "u3p", "vb", "vbe", "vbs", "vbscript", "workflow", "ws", "wsf"
+    ];
+    const fileName: string | undefined = file.name.split(".").pop()?.toLowerCase();
+
+    if (blockedFiles.includes(fileName || "")) {
+        return fileName;
+    }
+
+    return true;
+    // return !blockedFiles.includes(fileName || "");
+}
+
 const googleLogin = async () => {
     await signInWithPopup(auth, googleProvider);
 };
 
-const deleteFileFromCloudinary = async (public_id: string) => {
+const deleteFileFromCloudinary = async (public_id: string, resource_type: string) => {
     const response = await axios.delete("https://share-everthing-backend-production-d5e7.up.railway.app/api/delete-resource", {
         data: {
             public_id,
-            resource_type: "image"
+            resource_type
         },
         headers: { "Content-Type": "application/json" }
     });
@@ -93,5 +112,6 @@ export {
     googleLogin,
     deleteFileFromCloudinary,
     formatFileSize,
-    formatedDate
+    formatedDate,
+    validateFile
 }

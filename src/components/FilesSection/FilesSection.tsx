@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { DropZone, FilesList, Heading } from "../../components";
-import { deleteFileFromCloudinary, downloadFiles, uploadToCloudinary } from "../../helpers";
+import { deleteFileFromCloudinary, downloadFiles, uploadToCloudinary, validateFile } from "../../helpers";
 import { onValue, ref, db, update } from "../../firebase";
 import FilesBtns from "../FilesBtns";
 import toast from "react-hot-toast";
@@ -19,6 +19,7 @@ export interface FileType {
     public_id: string;
     createdAt: number;
     fileSize: number;
+    resource_type: "string";
 }
 
 const FilesSection = () => {
@@ -59,6 +60,14 @@ const FilesSection = () => {
 
         try {
             setIsUploading(true);
+            for (let file of acceptedFiles) {
+                const validate = validateFile(file);
+                if (validate !== true) {
+                    toast.error(`File type .${validate} is not allowed.`);
+                    return;
+                }
+            }
+            
             const promises = acceptedFiles.map((file) => uploadToCloudinary(file));
             const newFiles = await Promise.all(promises);
             setFiles((prevFiles) => [...prevFiles, ...newFiles]);
@@ -78,7 +87,7 @@ const FilesSection = () => {
         try {
             toast.loading("Loading...");
             setBtnsLoading(true);
-            const promises = files.map(file => deleteFileFromCloudinary(file.public_id));
+            const promises = files.map(file => deleteFileFromCloudinary(file.public_id, file.resource_type));
             await Promise.all(promises);
             await update(ref(db, `shares/${id}`), { files: [] });
             toast.dismiss();
@@ -127,11 +136,11 @@ const FilesSection = () => {
                 <Heading text="Files" />
                 {files.length > 0 && <FilesBtns loading={btnsLoading} downloadAllFiles={downloadAllFiles} deleteFiles={deleteAllFiles} />}
             </div>
-            <div className="flex gap-1 mt-2 justify-center sm:items-center">
-                <CiCircleInfo className="text-red-600 sm:text-lg"/>
+            {files.length > 0 && < div className="flex gap-1 mt-2 justify-center sm:items-center">
+                <CiCircleInfo className="text-red-600 sm:text-lg" />
                 <p className="text-red-500 text-xs sm:text-sm text-center">Files will automatically be deleted after <span className="font-bold">2 days</span>.</p>
-            </div>
-            <div className="mt-3 sm:mt-6 h-9/12">
+            </div>}
+            <div className="mt-3 mb-10 sm:mb-0 sm:mt-6 h-9/12">
                 {tempFiles.length || files.length ?
                     <FilesList onDrop={onDrop} tempFiles={tempFiles} files={files} /> :
                     <DropZone onDrop={onDrop} element={
