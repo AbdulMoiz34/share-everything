@@ -11,6 +11,7 @@ import { Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
 import { usePreventUnload } from "../../hooks";
 import { CiCircleInfo } from "react-icons/ci";
+import { push } from "firebase/database";
 
 export interface FileType {
     url: string;
@@ -34,7 +35,11 @@ const FilesSection = () => {
     useEffect(() => {
         onValue(ref(db, `shares/${id}`), (snapshot) => {
             if (snapshot.val()) {
-                setFiles(snapshot.val().files || []);
+                const filesArray: FileType[] = [];
+                for (const [, file] of Object.entries(snapshot.val().files || {})) {
+                    filesArray.push(file as FileType);
+                }
+                setFiles(filesArray);
             }
             setLoading(false);
         });
@@ -67,13 +72,14 @@ const FilesSection = () => {
                     return;
                 }
             }
-            
+
             const promises = acceptedFiles.map((file) => uploadToCloudinary(file));
             const newFiles = await Promise.all(promises);
+            
             setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-            await update(ref(db, `shares/${id}`), {
-                files: [...files, ...newFiles]
-            });
+            for (const file of newFiles) {
+                await push(ref(db, `shares/${id}/files`), file);
+            }
             toast.success("Saved.");
         } catch (err: unknown) {
             toast.error("something went wrong.");
