@@ -4,6 +4,8 @@ import { AiOutlinePlus } from "react-icons/ai";
 import { AuthContext } from "../../context";
 import type { FileType } from "../../types/file";
 import { useAppSelector } from "../../store/hooks";
+import { useAppDispatch } from "../../store/hooks";
+import { toggleSelect } from "../../store/reducers/fileReducer";
 
 
 interface FilesListProps {
@@ -15,6 +17,8 @@ const FilesList = ({ onDrop, files }: FilesListProps) => {
     const { user } = useContext(AuthContext);
     const queueItems = useAppSelector((s) => s.uploadQueue.items);
     const activeQueue = useMemo(() => queueItems.filter(q => q.status === "queued" || q.status === "uploading"), [queueItems]);
+    const selectedIds = useAppSelector((s) => s.fileUpload.selectedIds);
+    const dispatch = useAppDispatch();
     const [currentPage, setCurrentPage] = useState<number>(0);
 
     const chunks = (arr: FileType[], size: number) => {
@@ -37,7 +41,13 @@ const FilesList = ({ onDrop, files }: FilesListProps) => {
         <div className="relative h-full">
             <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
                 {(files.length > 0 && currentPage < newArr.length) && newArr[currentPage].map((file, idx) => (
-                    <FileCard key={idx} file={file} />
+                    <div key={file.public_id} className="relative">
+                        <FileCard
+                            file={file}
+                            selected={selectedIds.includes(file.public_id)}
+                            onToggleSelect={() => dispatch(toggleSelect(file.public_id))}
+                        />
+                    </div>
                 ))}
                 {activeQueue.map((q) => {
                     return <div className="rounded-md relative" key={q.id}>

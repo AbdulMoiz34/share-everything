@@ -25,6 +25,7 @@ import type { FileType } from "../../types/file";
 const FilesSection = () => {
     const dispatch = useAppDispatch();
     const files = useAppSelector((s) => s.fileUpload.files);
+    const selectedIds = useAppSelector((s) => s.fileUpload.selectedIds);
     const queueItems = useAppSelector((s) => s.uploadQueue.items);
     const { user } = useContext(AuthContext);
     const [loading, setLoading] = useState<boolean>(true);
@@ -123,12 +124,18 @@ const FilesSection = () => {
         try {
             toast.loading("Loading...");
             setBtnsLoading(true);
-            const promises = files.map(file => deleteResource({ public_id: file.public_id, resource_type: file.resource_type }).unwrap());
+            const idsToDelete = selectedIds.length > 0 ? new Set(selectedIds) : new Set(files.map(f => f.public_id));
+            const toDelete = files.filter(f => idsToDelete.has(f.public_id));
+            const remaining = files.filter(f => !idsToDelete.has(f.public_id));
+
+            const promises = toDelete.map(file =>
+                deleteResource({ public_id: file.public_id, resource_type: file.resource_type }).unwrap()
+            );
             await Promise.all(promises);
-            await update(ref(db, `shares/${id}`), { files: [] });
+            await update(ref(db, `shares/${id}`), { files: remaining });
             toast.dismiss();
-            toast.success(`${files.length > 1 ? "Files" : "File"} deleted.`);
-            dispatch(setFiles([]));
+            toast.success(`${toDelete.length > 1 ? "Files" : "File"} deleted.`);
+            dispatch(setFiles(remaining));
         } catch (_err) {
             toast.dismiss();
             toast.error("Try again.");
@@ -146,9 +153,11 @@ const FilesSection = () => {
             setIsUploading(true);
             setBtnsLoading(true);
             const load = toast.loading("Loading...");
-            await downloadFiles(files);
+            const idsToDownload = selectedIds.length > 0 ? new Set(selectedIds) : undefined;
+            const toDownload = idsToDownload ? files.filter(f => idsToDownload.has(f.public_id)) : files;
+            await downloadFiles(toDownload);
             toast.dismiss(load);
-            toast.success("Files downloaded successfully.");
+            toast.success(`${(idsToDownload ? toDownload : files).length > 1 ? "Files" : "File"} downloaded successfully.`);
         } catch (_err) {
             toast.dismiss();
             toast.error("Something went wrong. Try");

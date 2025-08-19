@@ -8,9 +8,11 @@ import { formatedDate, formatFileSize } from "../../helpers";
 
 interface FileCardProps {
     file: FileType | File;
+    selected?: boolean;
+    onToggleSelect?: () => void;
 }
 
-const FileCard = ({ file }: FileCardProps) => {
+const FileCard = ({ file, selected = false, onToggleSelect }: FileCardProps) => {
     let icon;
     const fileName: string = file.name;
 
@@ -29,7 +31,13 @@ const FileCard = ({ file }: FileCardProps) => {
     }
 
     return (
-        <div className="relative group w-32 h-32 shadow overflow-hidden rounded-md">
+        <div className={`relative group w-32 h-32 shadow overflow-hidden rounded-md ${selected ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}>
+            {selected && (
+                <div className="absolute top-1 right-1 z-20 bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
+                    <FaRegCheckCircle size={12} />
+                </div>
+            )}
+
             {file?.type?.startsWith("image") ? (
                 <img
                     loading="lazy"
@@ -49,21 +57,31 @@ const FileCard = ({ file }: FileCardProps) => {
                 </div>
             )}
 
-            <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-3">
-                <p className="absolute top-2 text-white text-xs">{"createdAt" in file ? formatedDate(file.createdAt) : ""}</p>
-                <p className="absolute bottom-2 text-white text-xs">{"fileSize" in file ? formatFileSize(file.fileSize) : ""}</p>
+            <div className={`${selected ? "" : "opacity-0 group-hover:opacity-100"} absolute inset-0 bg-black/40 transition-opacity`}>
+                <div className={`${selected && "hidden"} flex items-center justify-center gap-3 w-full h-full`}>
+                    <p className="absolute top-2 text-white text-xs">{"createdAt" in file ? formatedDate(file.createdAt) : ""}</p>
+                    <p className="absolute bottom-2 text-white text-xs">{"fileSize" in file ? formatFileSize(file.fileSize) : ""}</p>
 
-                <a
-                    href={"url" in file ? file.url : ""}
-                    target="_blank"
-                    className="p-2 bg-white rounded-full shadow hover:scale-110 transition hover:bg-blue-100"
-                >
-                    <MdOutlinePreview size={17} className="text-gray-800" />
-                </a>
-                <button
-                    className="p-2 bg-white rounded-full shadow hover:scale-110 transition cursor-pointer hover:bg-blue-100">
-                    <FaRegCheckCircle size={15} className="text-gray-800" />
-                </button>
+                    <a
+                        href={"url" in file ? file.url : ""}
+                        target="_blank"
+                        className="p-2 bg-white rounded-full shadow hover:scale-110 transition hover:bg-blue-100"
+                    >
+                        <MdOutlinePreview size={17} className="text-gray-800" />
+                    </a>
+                    <button
+                        onClick={onToggleSelect}
+                        className="p-2 bg-white rounded-full shadow hover:scale-110 transition cursor-pointer hover:bg-blue-100">
+                        <FaRegCheckCircle size={15} className="text-gray-800" />
+                    </button>
+                </div>
+                <div className={`${selected ? "block" : "hidden"} w-full h-full flex justify-center items-center`}>
+                    <button
+                        onClick={onToggleSelect}
+                        className="p-3 bg-blue-500 rounded-full shadow hover:scale-110 transition cursor-pointer hover:bg-blue-700">
+                        <FaRegCheckCircle size={25} className="text-white" />
+                    </button>
+                </div>
             </div>
         </div>
 
