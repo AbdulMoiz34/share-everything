@@ -40,7 +40,7 @@ const FilesList = ({ onDrop, files }: FilesListProps) => {
     return (
         <div className="relative h-full">
             <div className="flex flex-wrap gap-2 justify-center sm:justify-start">
-                {(files.length > 0 && currentPage < newArr.length) && newArr[currentPage].map((file, idx) => (
+                {(files.length > 0 && currentPage < newArr.length) && newArr[currentPage].map((file) => (
                     <div key={file.public_id} className="relative">
                         <FileCard
                             file={file}
