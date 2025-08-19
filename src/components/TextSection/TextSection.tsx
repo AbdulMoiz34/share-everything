@@ -47,7 +47,7 @@ const TextSection = () => {
             await update(ref(db, `shares/${id}`), { text });
             setIsSaved(true);
             setUrls(detetectURLS(text));
-        } catch (err) {
+        } catch (_err) {
             toast.error("something went wrong.");
         }
     }
@@ -62,7 +62,7 @@ const TextSection = () => {
             setText("");
             setUrls([]);
             setIsSaved(false);
-        } catch (err) {
+        } catch (_err) {
             toast.error("something went wrong.");
         }
     }

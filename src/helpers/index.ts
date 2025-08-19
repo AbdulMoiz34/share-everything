@@ -3,7 +3,7 @@ import axios from "axios";
 import JSZip from 'jszip';
 import { saveAs } from "file-saver";
 import { auth, googleProvider, signInWithPopup } from "../firebase/";
-import type { FileType } from "../components/FilesSection/FilesSection";
+import type { FileType } from "../types/file";
 
 const detetectURLS = (text: string): string[] => {
     const links = find(text);
@@ -86,7 +86,6 @@ const validateFile = (file: File) => {
     }
 
     return true;
-    // return !blockedFiles.includes(fileName || "");
 }
 
 const googleLogin = async () => {

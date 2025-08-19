@@ -3,7 +3,7 @@ import { FaHtml5, FaRegCheckCircle } from "react-icons/fa";
 import { IoLogoCss3 } from "react-icons/io5";
 import { IoLogoJavascript } from "react-icons/io";
 import { MdOutlinePreview } from "react-icons/md";
-import type { FileType } from "../FilesSection/FilesSection";
+import type { FileType } from "../../types/file";
 import { formatedDate, formatFileSize } from "../../helpers";
 
 interface FileCardProps {
@@ -35,6 +35,7 @@ const FileCard = ({ file }: FileCardProps) => {
                     loading="lazy"
                     className="object-cover w-full h-full"
                     src={"url" in file ? file.url : URL.createObjectURL(file as File)}
+                    alt={fileName}
                 />
             ) : (
                 <div className="flex flex-col justify-center items-center w-full h-full p-2">

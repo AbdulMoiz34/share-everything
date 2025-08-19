@@ -25,7 +25,7 @@ const Header = () => {
             await signOut(auth);
             setUser(null);
             toast.success("User signed out.");
-        } catch (err) {
+        } catch (_err) {
             toast.error("Error in signing out.");
         }
     }

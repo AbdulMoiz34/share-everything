@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { DropZone, FilesList, Heading } from "../../components";
-import { deleteFileFromCloudinary, downloadFiles, uploadToCloudinary, validateFile } from "../../helpers";
+import { downloadFiles, validateFile } from "../../helpers";
 import { onValue, ref, db, update } from "../../firebase";
 import FilesBtns from "../FilesBtns";
 import toast from "react-hot-toast";
@@ -12,38 +12,47 @@ import { LoadingOutlined } from '@ant-design/icons';
 import { usePreventUnload } from "../../hooks";
 import { CiCircleInfo } from "react-icons/ci";
 import { push } from "firebase/database";
+import { useAppDispatch, useAppSelector } from "../../store/hooks";
+import { setFiles } from "../../store/reducers/fileReducer";
+import { useDeleteResourceMutation, useUploadToCloudinaryMutation } from "../../store/services/filesApi";
+import { enqueueUploads, setUploadStatus, removeFromQueue } from "../../store/reducers/uploadQueue";
+import { UploadManager } from "../../store/services/UploadManager";
+import { nanoid } from "nanoid";
+import type { FileType } from "../../types/file";
 
-export interface FileType {
-    url: string;
-    type: string;
-    name: string;
-    public_id: string;
-    createdAt: number;
-    fileSize: number;
-    resource_type: "string";
-}
+ 
 
 const FilesSection = () => {
-    const [tempFiles, setTempFiles] = useState<File[]>([]);
-    const [files, setFiles] = useState<FileType[]>([]);
+    const dispatch = useAppDispatch();
+    const files = useAppSelector((s) => s.fileUpload.files);
+    const queueItems = useAppSelector((s) => s.uploadQueue.items);
     const { user } = useContext(AuthContext);
     const [loading, setLoading] = useState<boolean>(true);
     const [btnsLoading, setBtnsLoading] = useState<boolean>(false);
     const { id } = useParams();
     const [isUploading, setIsUploading] = useState<boolean>(false);
+    const [uploadToCloudinaryMutation] = useUploadToCloudinaryMutation();
+    const [deleteResource] = useDeleteResourceMutation();
 
     useEffect(() => {
-        onValue(ref(db, `shares/${id}`), (snapshot) => {
+        if (!id) {
+            setLoading(false);
+            return;
+        }
+        const unsubscribe = onValue(ref(db, `shares/${id}`), (snapshot) => {
             if (snapshot.val()) {
                 const filesArray: FileType[] = [];
                 for (const [, file] of Object.entries(snapshot.val().files || {})) {
                     filesArray.push(file as FileType);
                 }
-                setFiles(filesArray);
+                dispatch(setFiles(filesArray));
             }
             setLoading(false);
         });
-    }, []);
+        return () => {
+            unsubscribe();
+        }
+    }, [id, dispatch]);
 
 
     usePreventUnload(isUploading);
@@ -61,11 +70,9 @@ const FilesSection = () => {
             toast.error("you can select 10 files at once.");
             return;
         }
-        setTempFiles((prevFiles) => [...prevFiles, ...acceptedFiles]);
-
         try {
             setIsUploading(true);
-            for (let file of acceptedFiles) {
+            for (const file of acceptedFiles) {
                 const validate = validateFile(file);
                 if (validate !== true) {
                     toast.error(`File type .${validate} is not allowed.`);
@@ -73,18 +80,41 @@ const FilesSection = () => {
                 }
             }
 
-            const promises = acceptedFiles.map((file) => uploadToCloudinary(file));
-            const newFiles = await Promise.all(promises);
-            
-            setFiles((prevFiles) => [...prevFiles, ...newFiles]);
-            for (const file of newFiles) {
-                await push(ref(db, `shares/${id}/files`), file);
-            }
+            const queueItems = acceptedFiles.map((file) => {
+                const id = nanoid();
+                UploadManager.add(id, file);
+                return {
+                    id,
+                    name: file.name,
+                    type: file.type,
+                    size: file.size,
+                    createdAt: Date.now(),
+                    status: "queued" as const,
+                    previewUrl: file.type.startsWith("image") ? URL.createObjectURL(file) : undefined
+                };
+            });
+            dispatch(enqueueUploads(queueItems));
+
+            const promises = queueItems.map(async (q) => {
+                dispatch(setUploadStatus({ id: q.id, status: "uploading" }));
+                const f = UploadManager.get(q.id)!;
+                try {
+                    const uploaded = await uploadToCloudinaryMutation(f).unwrap();
+                    dispatch(setUploadStatus({ id: q.id, status: "success" }));
+                    UploadManager.remove(q.id);
+                    if (q.previewUrl) URL.revokeObjectURL(q.previewUrl);
+                    dispatch(removeFromQueue([q.id]));
+                    await push(ref(db, `shares/${id}/files`), uploaded);
+                } catch (e) {
+                    dispatch(setUploadStatus({ id: q.id, status: "error", errorMessage: "Upload failed" }));
+                    throw e;
+                }
+            });
+            await Promise.all(promises);
             toast.success("Saved.");
-        } catch (err: unknown) {
+        } catch (_err: unknown) {
             toast.error("something went wrong.");
         } finally {
-            setTempFiles([]);
             setIsUploading(false);
         }
     }
@@ -93,13 +123,13 @@ const FilesSection = () => {
         try {
             toast.loading("Loading...");
             setBtnsLoading(true);
-            const promises = files.map(file => deleteFileFromCloudinary(file.public_id, file.resource_type));
+            const promises = files.map(file => deleteResource({ public_id: file.public_id, resource_type: file.resource_type }).unwrap());
             await Promise.all(promises);
             await update(ref(db, `shares/${id}`), { files: [] });
             toast.dismiss();
             toast.success(`${files.length > 1 ? "Files" : "File"} deleted.`);
-            setFiles([]);
-        } catch (err) {
+            dispatch(setFiles([]));
+        } catch (_err) {
             toast.dismiss();
             toast.error("Try again.");
         } finally {
@@ -147,8 +177,8 @@ const FilesSection = () => {
                 <p className="text-red-500 text-xs sm:text-sm text-center">Files will automatically be deleted after <span className="font-bold">2 days</span>.</p>
             </div>}
             <div className="mt-3 mb-10 sm:mb-0 sm:mt-6 h-9/12">
-                {tempFiles.length || files.length ?
-                    <FilesList onDrop={onDrop} tempFiles={tempFiles} files={files} /> :
+                {queueItems.length || files.length ?
+                    <FilesList onDrop={onDrop} files={files} /> :
                     <DropZone onDrop={onDrop} element={
                         <div className="cursor-pointer hover:border-blue-400 hover:border-1 flex justify-center items-center h-full text-blue-800">
                             {user ? <div className="text-xs flex flex-col justify-center items-center gap-2"><LuFileStack className="text-4xl" /> Drag and drop any files.</div> : <div className="w-full text-center text-xs sm:text-sm">
