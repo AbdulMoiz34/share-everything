@@ -40,6 +40,7 @@ const FilesSection = () => {
             setLoading(false);
             return;
         }
+
         const unsubscribe = onValue(ref(db, `shares/${id}`), (snapshot) => {
             if (snapshot.val()) {
                 const filesArray: FileType[] = [];
@@ -53,6 +54,7 @@ const FilesSection = () => {
         return () => {
             unsubscribe();
         }
+
     }, [id, dispatch]);
 
 
@@ -71,6 +73,7 @@ const FilesSection = () => {
             toast.error("you can select 10 files at once.");
             return;
         }
+        
         try {
             setIsUploading(true);
             for (const file of acceptedFiles) {

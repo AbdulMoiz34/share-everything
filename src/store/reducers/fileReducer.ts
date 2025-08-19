@@ -21,18 +21,22 @@ const uploadFile = createSlice({
             const valid = new Set(action.payload.map(f => f.public_id));
             state.selectedIds = state.selectedIds.filter(id => valid.has(id));
         },
+
         toggleSelect(state, action: PayloadAction<string>) {
             const id = action.payload;
-            state.selectedIds = state.selectedIds.includes(id)
-                ? state.selectedIds.filter(x => x !== id)
-                : [...state.selectedIds, id];
+            state.selectedIds = state.selectedIds.includes(id) ?
+                state.selectedIds.filter(x => x !== id) :
+                [...state.selectedIds, id];
         },
+
         clearSelection(state) {
             state.selectedIds = [];
         },
+
         selectAll(state) {
             state.selectedIds = state.files.map(f => f.public_id);
         },
+        
         removeFilesByIds(state, action: PayloadAction<string[]>) {
             const toRemove = new Set(action.payload);
             state.files = state.files.filter(f => !toRemove.has(f.public_id));

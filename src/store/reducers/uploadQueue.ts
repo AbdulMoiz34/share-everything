@@ -29,6 +29,7 @@ const uploadQueueSlice = createSlice({
         enqueueUploads(state, action: PayloadAction<UploadQueueItem[]>) {
             state.items = [...state.items, ...action.payload];
         },
+
         setUploadStatus(state, action: PayloadAction<{ id: string; status: UploadStatus; errorMessage?: string }>) {
             const item = state.items.find(i => i.id === action.payload.id);
             if (item) {
@@ -36,10 +37,12 @@ const uploadQueueSlice = createSlice({
                 if (action.payload.errorMessage) item.errorMessage = action.payload.errorMessage;
             }
         },
+
         removeFromQueue(state, action: PayloadAction<string[]>) {
             const idSet = new Set(action.payload);
             state.items = state.items.filter(i => !idSet.has(i.id));
         },
+        
         clearCompleted(state) {
             state.items = state.items.filter(i => i.status !== "success");
         }

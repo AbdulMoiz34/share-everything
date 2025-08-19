@@ -7,5 +7,3 @@ export interface FileType {
     fileSize: number;
     resource_type: string;
 }
-
-

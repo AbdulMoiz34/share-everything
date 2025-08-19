@@ -15,6 +15,7 @@ const FilesBtns = ({ deleteFiles, downloadAllFiles, loading }: FilesBtnsProps) =
     const selectedCount = useAppSelector((s) => s.fileUpload.selectedIds.length);
     const allCount = useAppSelector((s) => s.fileUpload.files.length);
     const isAllSelected = allCount > 0 && selectedCount === allCount;
+    
     const deleteFilesHandler = () => {
         ConfirmModal("Are you sure?", "Files will be removed permanently.", deleteFiles);
     }
