@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 import { DropZone, FilesList, Heading } from "../../components";
-import { downloadFiles, validateFile } from "../../helpers";
+import { downloadFiles, validateFiles } from "../../helpers";
 import { onValue, ref, db, update } from "../../firebase";
 import FilesBtns from "../FilesBtns";
 import toast from "react-hot-toast";
@@ -20,8 +20,6 @@ import { UploadManager } from "../../store/services/UploadManager";
 import { nanoid } from "nanoid";
 import type { FileType } from "../../types/file";
 
- 
-
 const FilesSection = () => {
     const dispatch = useAppDispatch();
     const files = useAppSelector((s) => s.fileUpload.files);
@@ -33,7 +31,7 @@ const FilesSection = () => {
     const { id } = useParams();
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [uploadToCloudinaryMutation] = useUploadToCloudinaryMutation();
-    const [deleteResource ] = useDeleteResourceMutation();
+    const [deleteResource] = useDeleteResourceMutation();
 
     useEffect(() => {
         if (!id) {
@@ -73,15 +71,15 @@ const FilesSection = () => {
             toast.error("you can select 10 files at once.");
             return;
         }
-        
+
         try {
             setIsUploading(true);
-            for (const file of acceptedFiles) {
-                const validate = validateFile(file);
-                if (validate !== true) {
-                    toast.error(`File type .${validate} is not allowed.`);
-                    return;
-                }
+
+            const validate = validateFiles(acceptedFiles);
+            if (validate !== true) {
+                console.log("condition is true now.")
+                toast.error(`File type .${validate} is not allowed.`);
+                return;
             }
 
             const queueItems = acceptedFiles.map((file) => {

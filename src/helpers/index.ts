@@ -71,23 +71,26 @@ const downloadFiles = async (files: FileType[]) => {
     saveAs(zipBlob, "AllFiles");
 };
 
-const validateFile = (file: File) => {
-    const blockedFiles: string[] = [
+const validateFiles = (files: File[]) => {
+    const blockedFiles = new Set([
         "action", "apk", "app", "bat", "bin", "cmd", "com", "command",
         "cpl", "csh", "exe", "gadget", "inf1", "ins", "inx", "ipa", "isu",
         "job", "jse", "ksh", "lnk", "msc", "msi", "msp", "mst", "osx", "out",
         "paf", "pif", "prg", "ps1", "reg", "rgs", "run", "sct", "shb", "shs",
         "u3p", "vb", "vbe", "vbs", "vbscript", "workflow", "ws", "wsf"
-    ];
-    const fileName: string | undefined = file.name.split(".").pop()?.toLowerCase();
+    ]);
 
-    if (blockedFiles.includes(fileName || "")) {
-        return fileName;
+    for (let file of files) {
+        const fileName: string | undefined = file.name.split(".").pop()?.toLocaleLowerCase();
+
+        if (blockedFiles.has(fileName || "")) {
+            console.log("true" , fileName);
+            return fileName;
+        }
+        
+        return true;
     }
-
-    return true;
 }
-
 const googleLogin = async () => {
     await signInWithPopup(auth, googleProvider);
 };
@@ -112,5 +115,5 @@ export {
     deleteFileFromCloudinary,
     formatFileSize,
     formatedDate,
-    validateFile
+    validateFiles
 }
