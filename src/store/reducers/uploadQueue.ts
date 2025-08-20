@@ -51,6 +51,3 @@ const uploadQueueSlice = createSlice({
 
 export const { enqueueUploads, setUploadStatus, removeFromQueue, clearCompleted } = uploadQueueSlice.actions;
 export default uploadQueueSlice.reducer;
-
-
-

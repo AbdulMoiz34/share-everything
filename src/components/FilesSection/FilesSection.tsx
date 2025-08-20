@@ -33,7 +33,7 @@ const FilesSection = () => {
     const { id } = useParams();
     const [isUploading, setIsUploading] = useState<boolean>(false);
     const [uploadToCloudinaryMutation] = useUploadToCloudinaryMutation();
-    const [deleteResource] = useDeleteResourceMutation();
+    const [deleteResource ] = useDeleteResourceMutation();
 
     useEffect(() => {
         if (!id) {
@@ -160,10 +160,10 @@ const FilesSection = () => {
             const toDownload = idsToDownload ? files.filter(f => idsToDownload.has(f.public_id)) : files;
             await downloadFiles(toDownload);
             toast.dismiss(load);
-            toast.success(`${(idsToDownload ? toDownload : files).length > 1 ? "Files" : "File"} downloaded successfully.`);
+            toast.success(`Downloaded successfully.`);
         } catch (_err) {
             toast.dismiss();
-            toast.error("Something went wrong. Try");
+            toast.error("Something went wrong. Try again.");
         } finally {
             setBtnsLoading(false);
             setIsUploading(false);

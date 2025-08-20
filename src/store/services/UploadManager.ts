@@ -14,6 +14,3 @@ export const UploadManager = {
         for (const id of ids) idToFile.delete(id);
     }
 };
-
-
-

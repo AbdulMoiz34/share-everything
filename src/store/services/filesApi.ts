@@ -11,7 +11,6 @@ export const filesApi = createApi({
                 const formData = new FormData();
                 formData.append('file', file);
                 formData.append('upload_preset', 'fastshare098121321421');
-                formData.append('cloud_name', 'moiz34');
                 return {
                     url: "https://api.cloudinary.com/v1_1/moiz34/auto/upload",
                     method: "POST",
@@ -45,5 +44,3 @@ export const filesApi = createApi({
 });
 
 export const { useDeleteResourceMutation, useUploadToCloudinaryMutation } = filesApi;
-
-

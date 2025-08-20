@@ -2,12 +2,12 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { FileType } from "../../types/file";
 
-interface fileState {
+interface FileState {
     files: FileType[];
     selectedIds: string[];
 }
 
-const initialState: fileState = {
+const initialState: FileState = {
     files: [],
     selectedIds: []
 }

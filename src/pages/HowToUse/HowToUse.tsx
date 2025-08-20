@@ -51,7 +51,7 @@ const HowToUse = () => {
             </div>
 
             <p className="mt-10 text-gray-500 text-center italic">
-                Fast, private, and easy — that’s ShareEverything.
+                Fast, private, and easy — that's ShareEverything.
             </p>
         </div>
     );
