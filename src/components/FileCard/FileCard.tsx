@@ -33,7 +33,7 @@ const FileCard = ({ file, selected = false, onToggleSelect }: FileCardProps) => 
     return (
         <div className={`relative group w-32 h-32 shadow overflow-hidden rounded-md ${selected ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}>
             {selected && (
-                <div className="absolute top-1 right-1 z-20 bg-blue-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
+                <div className="absolute top-1 right-1 z-20 bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center">
                     <FaRegCheckCircle size={12} />
                 </div>
             )}

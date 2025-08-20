@@ -18,6 +18,7 @@ import LinkGeneratorButton from "./LinkGeneratorBoxBtn";
 import DeleteBtn from "./DeleteButton";
 import Footer from "./Footer";
 import ConfirmModal from "./ConfirmModal";
+import InfoMessageInFileSec from "./InfoMessageInFileSec";
 
 export {
     Header,
@@ -39,5 +40,6 @@ export {
     LinkGeneratorButton,
     DeleteBtn,
     Footer,
-    ConfirmModal
+    ConfirmModal,
+    InfoMessageInFileSec
 };

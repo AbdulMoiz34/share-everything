@@ -1,5 +1,5 @@
 import { useContext, useEffect, useState } from "react";
-import { DropZone, FilesList, Heading } from "../../components";
+import { DropZone, FilesList, Heading, InfoMessageInFileSec } from "../../components";
 import { downloadFiles, validateFiles } from "../../helpers";
 import { onValue, ref, db, update } from "../../firebase";
 import FilesBtns from "../FilesBtns";
@@ -10,7 +10,6 @@ import { LuFileStack } from "react-icons/lu";
 import { Spin } from "antd";
 import { LoadingOutlined } from '@ant-design/icons';
 import { usePreventUnload } from "../../hooks";
-import { CiCircleInfo } from "react-icons/ci";
 import { push } from "firebase/database";
 import { useAppDispatch, useAppSelector } from "../../store/hooks";
 import { setFiles } from "../../store/reducers/fileReducer";
@@ -29,8 +28,7 @@ const FilesSection = () => {
     const [loading, setLoading] = useState<boolean>(true);
     const [btnsLoading, setBtnsLoading] = useState<boolean>(false);
     const { id } = useParams();
-    const [isUploading, setIsUploading] = useState<boolean>(false);
-    const [uploadToCloudinaryMutation] = useUploadToCloudinaryMutation();
+    const [uploadToCloudinaryMutation, { isLoading }] = useUploadToCloudinaryMutation();
     const [deleteResource] = useDeleteResourceMutation();
 
     useEffect(() => {
@@ -56,7 +54,7 @@ const FilesSection = () => {
     }, [id, dispatch]);
 
 
-    usePreventUnload(isUploading);
+    usePreventUnload(isLoading);
     const onDrop = async (acceptedFiles: File[]) => {
         if (!id) {
             toast.error("Generate the URL and Save it.");
@@ -73,11 +71,9 @@ const FilesSection = () => {
         }
 
         try {
-            setIsUploading(true);
 
             const validate = validateFiles(acceptedFiles);
             if (validate !== true) {
-                console.log("condition is true now.")
                 toast.error(`File type .${validate} is not allowed.`);
                 return;
             }
@@ -116,8 +112,6 @@ const FilesSection = () => {
             toast.success("Saved.");
         } catch (_err: unknown) {
             toast.error("something went wrong.");
-        } finally {
-            setIsUploading(false);
         }
     }
 
@@ -151,7 +145,6 @@ const FilesSection = () => {
             return;
         }
         try {
-            setIsUploading(true);
             setBtnsLoading(true);
             const load = toast.loading("Loading...");
             const idsToDownload = selectedIds.length > 0 ? new Set(selectedIds) : undefined;
@@ -164,7 +157,6 @@ const FilesSection = () => {
             toast.error("Something went wrong. Try again.");
         } finally {
             setBtnsLoading(false);
-            setIsUploading(false);
         }
     }
 
@@ -182,10 +174,7 @@ const FilesSection = () => {
                 <Heading text="Files" />
                 {files.length > 0 && <FilesBtns loading={btnsLoading} downloadAllFiles={downloadAllFiles} deleteFiles={deleteAllFiles} />}
             </div>
-            {files.length > 0 && < div className="flex gap-1 mt-2 justify-center sm:items-center">
-                <CiCircleInfo className="text-red-600 sm:text-lg" />
-                <p className="text-red-500 text-xs sm:text-sm text-center">Files will automatically be deleted after <span className="font-bold">2 days</span>.</p>
-            </div>}
+            {files.length > 0 && <InfoMessageInFileSec />}
             <div className="mt-3 mb-10 sm:mb-0 sm:mt-6 h-9/12">
                 {queueItems.length || files.length ?
                     <FilesList onDrop={onDrop} files={files} /> :
