@@ -1,4 +1,5 @@
 const Footer = () => {
+
     return (
         <footer className="text-center py-4 text-sm text-gray-600">
             <div>
@@ -16,7 +17,7 @@ const Footer = () => {
                 </a>
             </div>
         </footer>
-    )
+    );
 }
 
 export default Footer;

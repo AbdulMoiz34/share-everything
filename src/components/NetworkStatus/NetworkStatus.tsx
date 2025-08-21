@@ -18,6 +18,7 @@ const NetworkStatus = () => {
         }
 
     }, [network.online]);
+    
     return null;
 }
 

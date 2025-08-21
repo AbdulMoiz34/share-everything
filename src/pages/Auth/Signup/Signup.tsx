@@ -1,13 +1,16 @@
-import { Heading } from "../../../components";
-import { useForm, type SubmitHandler, Controller } from "react-hook-form";
+import { AuthLink, Heading } from "../../../components";
+import { useForm, Controller, type SubmitHandler, type FieldError } from "react-hook-form";
 import { Button, Form, Divider } from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
 import { MdEmail } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { auth, createUserWithEmailAndPassword } from "../../../firebase";
 import { useState } from "react";
 import toast from "react-hot-toast";
 import { googleLogin } from "../../../helpers";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { emailPattern, passwordPattern } from "../../../constants";
+import { getFirebaseErrorMessage } from "../../../utils/firebaseErrors";
 
 type FormData = {
     email: string;
@@ -22,16 +25,17 @@ const Signup = () => {
     } = useForm<FormData>();
 
     const [loading, setLoading] = useState<boolean>(false);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const onSubmit: SubmitHandler<FormData> = async ({ email, password }) => {
         try {
             setLoading(true);
             await createUserWithEmailAndPassword(auth, email, password);
-            toast.success("you're loggedIn");
-            setTimeout(() => navigate("/"), 700);
-        } catch (err) {
-            toast.error("Something went wrong.");
+            toast.success("Account created successfully 🎉");
+            navigate("/", { replace: true });
+        } catch (_err) {
+            toast.error(getFirebaseErrorMessage(_err));
         } finally {
             setLoading(false);
         }
@@ -41,91 +45,76 @@ const Signup = () => {
         try {
             setLoading(true);
             await googleLogin();
-            setTimeout(() => navigate("/"), 700);
+            navigate("/", { replace: true });
         } catch (err) {
-            toast.error("Failed. Try Again.");
-        }finally {
+            toast.error("Google login failed. Try again.");
+        } finally {
             setLoading(false);
         }
     }
+
+    const emailError: FieldError | undefined = errors.email;
+    const passwordError: FieldError | undefined = errors.password;
+
+    const Icon = showPassword ? FaEyeSlash : FaEye;
     
     return (
         <div className="flex justify-center items-center w-full">
             <div className="w-full max-w-md bg-transparent rounded-xl p-8 space-y-6">
                 <Heading text="Sign Up" />
                 <Form layout="vertical" onFinish={handleSubmit(onSubmit)} className="space-y-4">
+
                     <Form.Item
                         label="Email"
-                        validateStatus={errors.email ? "error" : ""}
-                        help={
-                            errors.email ? (
-                                <div className="text-red-700 text-right text-xs">
-                                    {errors.email.message}
-                                </div>
-                            ) : null
-                        }
+                        help={emailError && <div className="text-red-700 text-right text-xs">{emailError?.message}</div>}
                     >
                         <Controller
                             name="email"
                             control={control}
                             rules={{
-                                required: "Email is required",
-                                pattern: {
-                                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                    message: "Enter a valid email",
-                                },
+                                required: "Email is required.",
+                                pattern: emailPattern
                             }}
                             render={({ field }) => (
                                 <div className="relative w-full">
                                     <input
                                         {...field}
                                         placeholder="Enter your email"
-                                        className={`w-full border-0 border-b ${errors.email ? "!border-red-500" : "border-gray-400"
-                                            } focus:border-blue-500 focus:outline-none py-2 text-base bg-transparent pr-8`}
+                                        className={`${emailError && "!border-red-600"} w-full border-0 border-b focus:border-blue-500 focus:outline-none py-2 text-base bg-transparent pr-8`}
                                     />
                                     <MdEmail
                                         size={18}
-                                        className={`absolute bottom-2 right-2 ${errors.email ? "text-red-500" : "text-blue-900"
-                                            }`}
+                                        className={`${emailError && "text-red-700"} text-blue-900 absolute bottom-2 right-2`}
                                     />
                                 </div>
                             )}
                         />
                     </Form.Item>
+
                     <Form.Item
                         label="Password"
-                        validateStatus={errors.email ? "error" : ""}
-                        help={
-                            errors.password ? (
-                                <div className="text-red-700 text-right text-xs">
-                                    {errors.password.message}
-                                </div>
-                            ) : null
-                        }
-                    >
+                        help={passwordError && <div className="text-red-700 text-right text-xs">{passwordError?.message}</div>} >
                         <Controller
                             name="password"
                             control={control}
                             rules={{
-                                required: "Password is required",
-                                pattern: {
-                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)[A-Za-z\d]{8,14}$/,
-                                    message: "one capital & one small letter, one digit and greater than 7 chars.",
-                                },
+                                required: "Password is required.",
+                                pattern: passwordPattern
                             }}
                             render={({ field }) => (
                                 <div className="relative w-full">
                                     <input
-                                        type="password"
+                                        type={showPassword ? "text" : "password"}
                                         {...field}
-                                        placeholder="Enter your email"
-                                        className={`w-full border-0 border-b ${errors.email ? "!border-red-500" : "border-gray-400"
+                                        placeholder="Enter your password"
+                                        className={`w-full border-0 border-b ${errors.password ? "!border-red-500" : "border-black"
                                             } focus:border-blue-500 focus:outline-none py-2 text-base bg-transparent pr-8`}
                                     />
-                                    <MdEmail
+                                    <Icon
+                                        onClick={() => setShowPassword(!showPassword)}
                                         size={18}
-                                        className={`absolute bottom-2 right-2 ${errors.email ? "text-red-500" : "text-blue-900"
-                                            }`}
+                                        className={`cursor-pointer hover:text-black ${errors.password ? "text-red-700" : "text-blue-900"
+                                            } absolute bottom-2 right-2`}
                                     />
                                 </div>
                             )}
@@ -138,7 +127,7 @@ const Signup = () => {
                         </Button>
                     </Form.Item>
                 </Form>
-                <div className="text-center text-gray-800">Already have an account? <Link to="/login" className="text-blue-500 hover:underline hover:text-blue-700">Login</Link></div>
+                <AuthLink text="Already have an account?" linkText="login" />
                 <Divider>or</Divider>
                 <Button
                     disabled={loading}

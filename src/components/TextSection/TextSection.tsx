@@ -17,15 +17,19 @@ const TextSection = () => {
     const { id } = useParams();
 
     useEffect(() => {
-        setLoading(true);
         onValue(ref(db, `shares/${id}`), (snapshot) => {
+
             if (snapshot.val()) {
-                setText(snapshot.val().text || "");
-                setUrls(detetectURLS(snapshot.val().text || ""));
-                if (snapshot.val().text) {
+                const text = snapshot.val().text;
+
+                setText(text || "");
+                setUrls(detetectURLS(text || ""));
+
+                if (text) {
                     setIsSaved(true);
                 }
             }
+
             setLoading(false);
         });
     }, []);
@@ -40,13 +44,15 @@ const TextSection = () => {
             toast.error("Generate the URL and Save it.");
             return;
         }
+
         logEvent(analytics, "text_saved", {
             saved_at: new Date().toISOString()
         });
+
         try {
             await update(ref(db, `shares/${id}`), { text });
-            setIsSaved(true);
             setUrls(detetectURLS(text));
+            setIsSaved(true);
         } catch (_err) {
             toast.error("something went wrong.");
         }
@@ -76,8 +82,7 @@ const TextSection = () => {
             {loading ?
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                     <Spin indicator={<LoadingOutlined spin />} size="large" />
-                </div>
-                :
+                </div> :
                 <>
                     <Heading text="Text" />
                     <TextArea text={text} onChangeHandler={onChangeHandler} />

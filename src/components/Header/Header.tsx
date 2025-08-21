@@ -4,29 +4,27 @@ import Logo from "../Logo";
 import { FaBars, FaGithub } from "react-icons/fa";
 import { useContext, useState } from "react";
 import { AuthContext } from "../../context";
-import { signOut } from "firebase/auth";
-import { auth } from "../../firebase";
+import { auth, signOut } from "../../firebase";
 import toast from "react-hot-toast";
-
+import LogoutBtn from "../LogoutBtn";
 
 const getNavLinkClass = ({ isActive }: { isActive: boolean }): string => {
     return isActive ? 'text-blue-600 font-bold' : 'text-gray-500 hover:text-blue-500';
-};
+}
 
 const Header = () => {
     const { user, setUser } = useContext(AuthContext);
     const [isMenuOpen, setIsOpenMenu] = useState<boolean>(false);
 
-    let id: string | null = null;
-    id = localStorage.getItem("id");
+    let id: string | null = localStorage.getItem("id");
 
-    const signoutHandler = async () => {
+    const logoutHandler = async () => {
         try {
             await signOut(auth);
             setUser(null);
-            toast.success("User signed out.");
+            toast.success("Logged out✅.");
         } catch (_err) {
-            toast.error("Error in signing out.");
+            toast.error("Logout failed. Please try again.");
         }
     }
 
@@ -44,16 +42,13 @@ const Header = () => {
                         <li>
                             <NavLink to={`${id ? `/view/${id}` : "/"}`} className={getNavLinkClass}>Home </NavLink>
                         </li>
+
                         <li>
                             <NavLink to="/howToUse" className={getNavLinkClass}>How to use it </NavLink>
                         </li>
 
                         <li className="text-blue-500 font-bold text-[14px] hover:text-blue-600">
-                            {user ?
-                                <Tooltip placement="bottom" title="Are you sure?">
-                                    <button className="cursor-pointer" onClick={signoutHandler}>Log Out</button>
-                                </Tooltip> :
-                                <NavLink to={"login"}>Login / Register</NavLink>}
+                            {user ? <LogoutBtn logoutHandler={logoutHandler} /> : <NavLink to={"login"}>Login / Register</NavLink>}
                         </li>
 
                         <li className="text-gray-500 hover:text-blue-600">
@@ -74,11 +69,7 @@ const Header = () => {
                     </li>
 
                     <li className="text-blue-500 font-bold text-[14px] hover:text-blue-600">
-                        {user ?
-                            <Tooltip placement="bottom" title="Are you sure?">
-                                <button className="cursor-pointer" onClick={signoutHandler}>Log Out</button>
-                            </Tooltip> :
-                            <NavLink to={"login"}>Login / Register</NavLink>}
+                        {user ? <LogoutBtn logoutHandler={logoutHandler} /> : <NavLink to={"login"}>Login / Register</NavLink>}
                     </li>
 
                     <li className="text-gray-500 hover:text-blue-600">

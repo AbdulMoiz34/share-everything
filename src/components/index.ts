@@ -19,6 +19,8 @@ import DeleteBtn from "./DeleteButton";
 import Footer from "./Footer";
 import ConfirmModal from "./ConfirmModal";
 import InfoMessageInFileSec from "./InfoMessageInFileSec";
+import LogoutBtn from "./LogoutBtn";
+import AuthLink from "./AuthLink";
 
 export {
     Header,
@@ -41,5 +43,7 @@ export {
     DeleteBtn,
     Footer,
     ConfirmModal,
-    InfoMessageInFileSec
+    InfoMessageInFileSec,
+    LogoutBtn,
+    AuthLink
 };

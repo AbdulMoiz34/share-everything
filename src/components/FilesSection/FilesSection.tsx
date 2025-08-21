@@ -85,8 +85,6 @@ const FilesSection = () => {
                     id,
                     name: file.name,
                     type: file.type,
-                    size: file.size,
-                    createdAt: Date.now(),
                     status: "queued" as const,
                     previewUrl: file.type.startsWith("image") ? URL.createObjectURL(file) : undefined
                 };

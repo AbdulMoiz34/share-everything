@@ -24,7 +24,6 @@ export default function App() {
       setLoading(false);
     });
   }, []);
-
   if (loading) {
     return <div className="h-screen w-screen flex justify-center items-center">
       <Spin size="large" />
@@ -36,7 +35,7 @@ export default function App() {
     setUser,
     loading,
   }
-  
+
   return (
     <>
       <Toaster position="top-center" />

@@ -7,8 +7,6 @@ export interface UploadQueueItem {
     id: string;
     name: string;
     type: string;
-    size: number;
-    createdAt: number;
     status: UploadStatus;
     errorMessage?: string;
     previewUrl?: string;

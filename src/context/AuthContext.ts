@@ -4,6 +4,7 @@ export interface User {
     email: string | null | undefined;
     uid: string | null | undefined;
 }
+
 interface AuthContextType {
     user: User | null;
     loading: boolean;

@@ -1,5 +1,5 @@
 import { getDatabase, ref, set, onValue, remove, update } from "firebase/database";
-import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
+import { createUserWithEmailAndPassword, signOut, getAuth, onAuthStateChanged, GoogleAuthProvider, signInWithPopup, signInWithEmailAndPassword } from "firebase/auth";
 import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 
@@ -32,5 +32,6 @@ export {
     googleProvider,
     signInWithPopup,
     signInWithEmailAndPassword,
-    analytics
+    analytics,
+    signOut
 };

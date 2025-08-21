@@ -1,13 +1,16 @@
-import { Heading } from "../../../components";
-import { useForm, type SubmitHandler, Controller } from "react-hook-form";
+import { AuthLink, Heading } from "../../../components";
+import { useForm, type SubmitHandler, Controller, type FieldError } from "react-hook-form";
 import { Button, Form, Divider } from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
 import { MdEmail } from "react-icons/md";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { auth, signInWithEmailAndPassword, } from "../../../firebase/";
 import toast from "react-hot-toast";
 import { googleLogin } from "../../../helpers";
+import { emailPattern } from "../../../constants";
+import { FaEye, FaEyeSlash } from "react-icons/fa";
+import { getFirebaseErrorMessage } from "../../../utils/firebaseErrors";
 
 type FormData = {
     email: string;
@@ -22,6 +25,7 @@ const Login = () => {
     } = useForm<FormData>();
 
     const [loading, setLoading] = useState<boolean>(false);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const onSubmit: SubmitHandler<FormData> = async ({ email, password }) => {
@@ -29,25 +33,29 @@ const Login = () => {
             setLoading(true);
             await signInWithEmailAndPassword(auth, email, password);
             toast.success("you're loggedIn");
-            setTimeout(() => navigate("/"), 700);
-        } catch (err) {
-            toast.error("Password or Email can be wrong.");
+            navigate("/");
+        } catch (_err) {
+            toast.error(getFirebaseErrorMessage(_err));
         } finally {
             setLoading(false);
         }
     };
 
-    const handleGoogleLogin = async () => {
+    const googleLoginHandler = async () => {
         try {
             setLoading(true);
             await googleLogin();
-            setTimeout(() => navigate("/"), 700);
+            navigate("/", { replace: true });
         } catch (err) {
-            toast.error("Failed. Try Again.");
+            toast.error("Google login failed. Try again.");
         } finally {
             setLoading(false);
         }
-    };
+    }
+
+    const emailError: FieldError | undefined = errors.email;
+
+    const Icon = showPassword ? FaEyeSlash : FaEye;
 
     return (
         <div className="flex justify-center items-center w-full">
@@ -56,81 +64,62 @@ const Login = () => {
                 <Form layout="vertical" onFinish={handleSubmit(onSubmit)} className="space-y-4">
                     <Form.Item
                         label="Email"
-                        validateStatus={errors.email ? "error" : ""}
-                        help={
-                            errors.email ? (
-                                <div className="text-red-700 text-right text-xs">
-                                    {errors.email.message}
-                                </div>
-                            ) : null
-                        }
+                        help={emailError && <div className="text-red-700 text-right text-xs">{emailError?.message}</div>}
                     >
                         <Controller
                             name="email"
                             control={control}
                             rules={{
                                 required: "Email is required",
-                                pattern: {
-                                    value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                    message: "Enter a valid email",
-                                },
+                                pattern: emailPattern
                             }}
                             render={({ field }) => (
                                 <div className="relative w-full">
                                     <input
                                         {...field}
                                         placeholder="Enter your email"
-                                        className={`w-full border-0 border-b ${errors.email ? "!border-red-500" : "border-gray-400"
-                                            } focus:border-blue-500 focus:outline-none py-2 text-base bg-transparent pr-8`}
+                                        className={`${emailError && "!border-red-600"} w-full border-0 border-b focus:border-blue-500 focus:outline-none py-2 text-base bg-transparent pr-8`}
                                     />
                                     <MdEmail
                                         size={18}
-                                        className={`absolute bottom-2 right-2 ${errors.email ? "text-red-500" : "text-blue-900"
-                                            }`}
+                                        className={`${emailError && "text-red-600"} text-blue-900 absolute bottom-2 right-2`}
                                     />
                                 </div>
                             )}
                         />
                     </Form.Item>
                     <Form.Item
-                        label="Password"
-                        validateStatus={errors.email ? "error" : ""}
-                        help={
-                            errors.password ? (
-                                <div className="text-red-700 text-right text-xs">
-                                    {errors.password.message}
-                                </div>
-                            ) : null
-                        }
-                    >
+                        label="Password">
                         <Controller
                             name="password"
                             control={control}
                             render={({ field }) => (
                                 <div className="relative w-full">
                                     <input
+                                        type={showPassword ? "text" : "password"}
                                         {...field}
                                         placeholder="Enter your password"
-                                        className={`w-full border-0 border-b ${errors.email ? "!border-red-500" : "border-gray-400"
+                                        className={`w-full border-0 border-b ${errors.password ? "!border-red-500" : "border-black"
                                             } focus:border-blue-500 focus:outline-none py-2 text-base bg-transparent pr-8`}
                                     />
-                                    <MdEmail
+                                    <Icon
+                                        onClick={() => setShowPassword(!showPassword)}
                                         size={18}
-                                        className={`absolute bottom-2 right-2 ${errors.email ? "text-red-500" : "text-blue-900"
-                                            }`}
+                                        className={`cursor-pointer hover:text-black ${errors.password ? "text-red-700" : "text-blue-900"
+                                            } absolute bottom-2 right-2`}
                                     />
                                 </div>
                             )}
                         />
                     </Form.Item>
 
-                    <Form.Item >
+                    <Form.Item>
                         <Button loading={loading} size="large" type="primary" htmlType="submit" className="w-full mt-4">
                             Login
                         </Button>
                     </Form.Item>
                 </Form>
-                <div className="text-center text-gray-800">Don't have an account? <Link to="/signup" className="text-blue-500 hover:underline hover:text-blue-700">Signup</Link></div>
+                <AuthLink text="Don't have an account?" linkText="signup" />
                 <Divider>or</Divider>
                 <Button
                     disabled={loading}
@@ -138,12 +127,12 @@ const Login = () => {
                     icon={<GoogleOutlined />}
                     type="default"
                     className="w-full"
-                    onClick={handleGoogleLogin}
+                    onClick={googleLoginHandler}
                 >
                     Sign in with Google
                 </Button>
             </div>
-        </div>
+        </div >
     );
 };
 

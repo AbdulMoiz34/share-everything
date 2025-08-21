@@ -6,18 +6,23 @@ type SideBarProps = {
     setType: (type: "text" | "files") => void;
 }
 const SideBar = ({ type, setType }: SideBarProps) => {
-    const isActiveClass = type === "text";
+
+    const isText = type === "text";
+
     return (
         <div className="bg-blue-100 flex justify-center sm:justify-start flex-row sm:flex-col h-full">
-            <button className={`flex-1 sm:flex-none  p-4 sm:p-6 text-lg sm:text-2xl hover:bg-white cursor-pointer ${isActiveClass ? "text-blue-500 font-semibold bg-white" : "text-gray-500"}`} onClick={() => setType("text")}>
+            <button
+                onClick={() => setType("text")}
+                className={`${isText && "!text-blue-500 bg-white"} text-gray-600 flex-1 sm:flex-none bg-transparent p-4 sm:p-6 text-lg sm:text-2xl hover:bg-white cursor-pointer`}>
                 <FaBarsStaggered />
             </button>
-            <button className={`flex-1 sm:flex-none p-4 sm:p-6 text-lg sm:text-2xl hover:bg-white cursor-pointer ${!isActiveClass ? "text-blue-500 font-semibold bg-white" : "text-gray-500"}`} onClick={() => setType("files")}>
-                {!isActiveClass ?
-                    <FaFileAlt className="text-blue-500" /> :
-                    <FaRegFileAlt />}
+            
+            <button
+                onClick={() => setType("files")}
+                className={`${!isText && "bg-white"} bg-transparent flex-1 sm:flex-none p-4 sm:p-6 text-lg sm:text-2xl hover:bg-white cursor-pointer text-gray-600`}>
+                {isText ? <FaRegFileAlt /> : <FaFileAlt className="text-blue-500" />}
             </button>
-        </div>
+        </div >
     )
 }
 
