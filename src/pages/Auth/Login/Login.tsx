@@ -1,6 +1,6 @@
 import { AuthLink, Heading } from "../../../components";
 import { useForm, type SubmitHandler, Controller, type FieldError } from "react-hook-form";
-import { Button, Form, Divider } from "antd";
+import { Button, Form } from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
 import { MdEmail } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -112,15 +112,12 @@ const Login = () => {
                             )}
                         />
                     </Form.Item>
-
                     <Form.Item>
                         <Button loading={loading} size="large" type="primary" htmlType="submit" className="w-full mt-4">
                             Login
                         </Button>
                     </Form.Item>
                 </Form>
-                <AuthLink text="Don't have an account?" linkText="signup" />
-                <Divider>or</Divider>
                 <Button
                     disabled={loading}
                     size="large"
@@ -131,6 +128,7 @@ const Login = () => {
                 >
                     Sign in with Google
                 </Button>
+                <AuthLink text="Don't have an account?" linkText="signup" />
             </div>
         </div >
     );

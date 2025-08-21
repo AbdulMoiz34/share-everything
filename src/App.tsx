@@ -24,6 +24,7 @@ export default function App() {
       setLoading(false);
     });
   }, []);
+  
   if (loading) {
     return <div className="h-screen w-screen flex justify-center items-center">
       <Spin size="large" />

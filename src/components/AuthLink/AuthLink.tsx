@@ -7,7 +7,7 @@ interface AuthLinkProps {
 
 const AuthLink = ({ text, linkText }: AuthLinkProps) => {
     return (
-        <div className="text-center text-gray-800">
+        <div className="text-center text-gray-800 m-0">
             <span>{text}</span>
             <Link to={`/${linkText}`} className="ml-1 text-blue-500 hover:underline hover:text-blue-700 capitalize">{linkText}</Link>
         </div>

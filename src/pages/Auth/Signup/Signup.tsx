@@ -1,6 +1,6 @@
 import { AuthLink, Heading } from "../../../components";
 import { useForm, Controller, type SubmitHandler, type FieldError } from "react-hook-form";
-import { Button, Form, Divider } from "antd";
+import { Button, Form } from "antd";
 import { GoogleOutlined } from "@ant-design/icons";
 import { MdEmail } from "react-icons/md";
 import { useNavigate } from "react-router-dom";
@@ -57,7 +57,7 @@ const Signup = () => {
     const passwordError: FieldError | undefined = errors.password;
 
     const Icon = showPassword ? FaEyeSlash : FaEye;
-    
+
     return (
         <div className="flex justify-center items-center w-full">
             <div className="w-full max-w-md bg-transparent rounded-xl p-8 space-y-6">
@@ -127,8 +127,6 @@ const Signup = () => {
                         </Button>
                     </Form.Item>
                 </Form>
-                <AuthLink text="Already have an account?" linkText="login" />
-                <Divider>or</Divider>
                 <Button
                     disabled={loading}
                     size="large"
@@ -139,6 +137,7 @@ const Signup = () => {
                 >
                     Sign up with Google
                 </Button>
+                <AuthLink text="Already have an account?" linkText="login" />
             </div>
         </div>
     );
