@@ -16,7 +16,7 @@ const Header = () => {
     const { user, setUser } = useContext(AuthContext);
     const [isMenuOpen, setIsOpenMenu] = useState<boolean>(false);
 
-    let id: string | null = localStorage.getItem("id");
+    const id: string | null = localStorage.getItem("id");
 
     const logoutHandler = async () => {
         try {

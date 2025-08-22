@@ -74,7 +74,7 @@ const FilesSection = () => {
 
             const validate = validateFiles(acceptedFiles);
             if (validate !== true) {
-                toast.error(`File type .${validate} is not allowed.`);
+                toast.error(validate);
                 return;
             }
 
@@ -109,7 +109,7 @@ const FilesSection = () => {
             await Promise.all(promises);
             toast.success("Saved.");
         } catch (_err: unknown) {
-            toast.error("something went wrong.");
+            toast.error("something went wrong. Try again.");
         }
     }
 

@@ -56,11 +56,19 @@ const validateFiles = (files: File[]) => {
         "u3p", "vb", "vbe", "vbs", "vbscript", "workflow", "ws", "wsf"
     ]);
 
-    for (let file of files) {
-        const fileName: string | undefined = file.name.split(".").pop()?.toLocaleLowerCase();
+    const MAX_FILE_SIZE = 10 * 1024 * 1024;   // 10 MB
+    const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100 MB
+
+    for (const file of files) {
+        const fileName: string | undefined = file.name.split(".").pop()?.toLowerCase();
+        const isVideo = file.type.startsWith("video/");
 
         if (blockedFiles.has(fileName || "")) {
-            return fileName;
+            return `File type .${fileName} is not allowed.`;
+        } else if (isVideo && MAX_VIDEO_SIZE < file.size) {
+            return "Your video is too large. Max size is 100MB";
+        } else if (!isVideo && MAX_FILE_SIZE < file.size) {
+            return "Your file is too large. Max size is 10MB";
         }
     }
 
