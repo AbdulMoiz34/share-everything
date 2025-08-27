@@ -22,7 +22,7 @@ const Header = () => {
         try {
             await signOut(auth);
             setUser(null);
-            toast.success("Logged out✅.");
+            toast.success("Logged out.");
         } catch (_err) {
             toast.error("Logout failed. Please try again.");
         }
@@ -37,7 +37,7 @@ const Header = () => {
                 <button onClick={() => setIsOpenMenu(!isMenuOpen)} className="sm:hidden cursor-pointer hover:shadow hover:bg-blue-100 hover:text-blue-900 p-2 rounded-md">
                     <FaBars />
                 </button>
-                <div className={`sm:hidden text-xs absolute top-2 py-4 rounded-md shadow left-[-130px] z-10 bg-white px-6 ${!isMenuOpen && "hidden"}`}>
+                <div className={`${!isMenuOpen && "hidden"} px-${user ? "8" : "4"} left-[-150px] sm:hidden text-xs absolute top-2 py-2 rounded-md shadow z-10 bg-white`}>
                     <ul className="flex flex-col items-center gap-y-2">
                         <li>
                             <NavLink to={`${id ? `/view/${id}` : "/"}`} className={getNavLinkClass}>Home </NavLink>
