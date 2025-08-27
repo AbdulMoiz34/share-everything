@@ -8,4 +8,7 @@ const passwordPattern = {
     message: "one capital & one small letter, one digit and greater than 7 chars.",
 };
 
-export { emailPattern, passwordPattern };
+const MAX_FILE_SIZE = 10 * 1024 * 1024;   // 10 MB
+const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100 MB
+
+export { emailPattern, passwordPattern, MAX_FILE_SIZE, MAX_VIDEO_SIZE };

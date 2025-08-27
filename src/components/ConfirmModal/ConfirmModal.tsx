@@ -1,7 +1,6 @@
 import { Modal } from 'antd';
 import { ExclamationCircleFilled } from '@ant-design/icons';
 
-
 const ConfirmModal = (title: string, content: string, onConfirm: () => void) => {
     const { confirm } = Modal;
 

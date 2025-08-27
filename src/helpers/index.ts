@@ -4,6 +4,7 @@ import JSZip from 'jszip';
 import { saveAs } from "file-saver";
 import { auth, googleProvider, signInWithPopup } from "../firebase/";
 import type { FileType } from "../types/file";
+import { MAX_FILE_SIZE, MAX_VIDEO_SIZE } from "../constants";
 
 const detetectURLS = (text: string): string[] => {
     const links = find(text);
@@ -55,9 +56,6 @@ const validateFiles = (files: File[]) => {
         "paf", "pif", "prg", "ps1", "reg", "rgs", "run", "sct", "shb", "shs",
         "u3p", "vb", "vbe", "vbs", "vbscript", "workflow", "ws", "wsf"
     ]);
-
-    const MAX_FILE_SIZE = 10 * 1024 * 1024;   // 10 MB
-    const MAX_VIDEO_SIZE = 100 * 1024 * 1024; // 100 MB
 
     for (const file of files) {
         const fileName: string | undefined = file.name.split(".").pop()?.toLowerCase();
