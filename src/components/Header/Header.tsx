@@ -37,7 +37,7 @@ const Header = () => {
                 <button onClick={() => setIsOpenMenu(!isMenuOpen)} className="sm:hidden cursor-pointer hover:shadow hover:bg-blue-100 hover:text-blue-900 p-2 rounded-md">
                     <FaBars />
                 </button>
-                <div className={`${!isMenuOpen && "hidden"} px-${user ? "8" : "4"} left-[-150px] sm:hidden text-xs absolute top-2 py-2 rounded-md shadow z-10 bg-white`}>
+                <div style={{ padding: `8px ${user ? "32px" : "16px"}` }} className={`${!isMenuOpen && "hidden"} left-[-150px] sm:hidden text-xs absolute top-2 rounded-md shadow z-10 bg-white`}>
                     <ul className="flex flex-col items-center gap-y-2">
                         <li>
                             <NavLink to={`${id ? `/view/${id}` : "/"}`} className={getNavLinkClass}>Home </NavLink>
