@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://share-everything.netlify.app/sitemap.xml
