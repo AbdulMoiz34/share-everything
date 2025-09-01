@@ -36,7 +36,7 @@ const FileCard = ({ file, selected = false, onToggleSelect }: FileCardProps) => 
     return (
         <div
             onClick={() => setShowOverlay((prev) => !prev)}
-            className={`relative bg-red-500 group w-32 h-32 shadow overflow-hidden rounded-md ${selected ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}>
+            className={`relative group w-32 h-32 shadow overflow-hidden rounded-md ${selected ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}>
             {selected && (
                 <div className="absolute top-1 right-1 z-20 bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center">
                     <FaRegCheckCircle size={12} />
