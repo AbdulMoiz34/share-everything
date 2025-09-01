@@ -19,8 +19,8 @@ const TextSection = () => {
     useEffect(() => {
         onValue(ref(db, `shares/${id}`), (snapshot) => {
 
-            if (snapshot.val()) {
-                const text = snapshot.val().text;
+            if (snapshot.val()?.text) {
+                const text = snapshot.val().text.val;
 
                 setText(text || "");
                 setUrls(detetectURLS(text || ""));
@@ -50,7 +50,7 @@ const TextSection = () => {
         });
 
         try {
-            await update(ref(db, `shares/${id}`), { text });
+            await update(ref(db, `shares/${id}`), { text: { val: text, createdAt: Date.now() } });
             setUrls(detetectURLS(text));
             setIsSaved(true);
         } catch (_err) {
@@ -64,7 +64,7 @@ const TextSection = () => {
             return;
         }
         try {
-            await update(ref(db, `shares/${id}`), { text: "" });
+            await update(ref(db, `shares/${id}`), { text: {} });
             setText("");
             setUrls([]);
             setIsSaved(false);
