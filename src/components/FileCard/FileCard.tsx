@@ -5,6 +5,7 @@ import { IoLogoJavascript } from "react-icons/io";
 import { MdOutlinePreview } from "react-icons/md";
 import type { FileType } from "../../types/file";
 import { formatedDate, formatFileSize } from "../../helpers";
+import { useState } from "react";
 
 interface FileCardProps {
     file: FileType | File;
@@ -13,6 +14,8 @@ interface FileCardProps {
 }
 
 const FileCard = ({ file, selected = false, onToggleSelect }: FileCardProps) => {
+    const [showOverlay, setShowOverlay] = useState<boolean>(false);
+
     let icon;
     const fileName: string = file.name;
 
@@ -31,7 +34,9 @@ const FileCard = ({ file, selected = false, onToggleSelect }: FileCardProps) => 
     }
 
     return (
-        <div className={`relative group w-32 h-32 shadow overflow-hidden rounded-md ${selected ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}>
+        <div
+            onClick={() => setShowOverlay((prev) => !prev)}
+            className={`relative bg-red-500 group w-32 h-32 shadow overflow-hidden rounded-md ${selected ? "ring-2 ring-blue-500 ring-offset-2" : ""}`}>
             {selected && (
                 <div className="absolute top-1 right-1 z-20 bg-blue-600 text-white rounded-full w-6 h-6 flex items-center justify-center">
                     <FaRegCheckCircle size={12} />
@@ -57,11 +62,10 @@ const FileCard = ({ file, selected = false, onToggleSelect }: FileCardProps) => 
                 </div>
             )}
 
-            <div className={`${selected ? "" : "opacity-0 group-hover:opacity-100"} absolute inset-0 bg-black/40 transition-opacity`}>
+            <div className={`${selected ? "" : showOverlay ? "opacity-100" : "opacity-0 group-hover:opacity-100"} absolute inset-0 bg-black/40 transition-opacity`}>
                 <div className={`${selected && "hidden"} flex items-center justify-center gap-3 w-full h-full`}>
                     <p className="absolute top-2 text-white text-xs">{"createdAt" in file ? formatedDate(file.createdAt) : ""}</p>
                     <p className="absolute bottom-2 text-white text-xs">{"fileSize" in file ? formatFileSize(file.fileSize) : ""}</p>
-
                     <a
                         href={"url" in file ? file.url : ""}
                         target="_blank"
