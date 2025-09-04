@@ -60,7 +60,7 @@ const FilesList = ({ onDrop, files }: FilesListProps) => {
                         </div>
                         <div className="brightness-50 bg-black w-32 h-32 overflow-hidden rounded-md flex items-center justify-center">
                             {q.previewUrl ? (
-                                <img alt={q.name} loading="lazy" className="object-cover w-full h-full" src={q.previewUrl} />
+                                <img src={q.previewUrl} loading="lazy" alt={q.name} className="object-cover w-full h-full"  />
                             ) : (
                                 <div className="text-white text-[10px] p-2 text-center break-words">{q.name}</div>
                             )}
